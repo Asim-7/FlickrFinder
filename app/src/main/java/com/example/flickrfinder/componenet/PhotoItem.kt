@@ -18,22 +18,24 @@ fun PhotoItem(
     item: PhotoData,
     onItemClicked: (item: PhotoData) -> Unit
 ) {
-    Column(modifier = Modifier.clickable {
-        onItemClicked(item)
-    }) {
+    Column(modifier = Modifier
+        .wrapContentSize()
+        .clip(RoundedCornerShape(5.dp))
+        .clickable { onItemClicked(item) }
+    ) {
         Image(
             painter = rememberAsyncImagePainter(item.url),
             contentDescription = null,
             modifier = Modifier
-                .width(223.dp)
-                .height(125.dp)
+                .width(150.dp)
+                .height(100.dp)
                 .align(Alignment.CenterHorizontally)
-                .clip(RoundedCornerShape(5.dp))
         )
         Text(
             text = item.title,
             modifier = Modifier
-                .padding(top = 5.dp)
+                .width(150.dp)
+                .padding(5.dp)
                 .align(Alignment.CenterHorizontally)
         )
     }

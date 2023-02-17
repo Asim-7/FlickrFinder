@@ -38,11 +38,12 @@ fun FlickrAppLayout(navigationViewModel: PhotoViewModel = hiltViewModel()) {
         val listState = rememberLazyGridState()
 
         LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Adaptive(150.dp),
             state = listState,
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(25.dp),
-            contentPadding = PaddingValues(vertical = 33.dp, horizontal = 54.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(vertical = 10.dp, horizontal = 10.dp)
         ) {
             items(navigationViewModel.photosList) { item ->
                 PhotoItem(item) { photoItem ->
