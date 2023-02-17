@@ -1,16 +1,22 @@
 package com.example.flickrfinder
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.flickrfinder.componenet.PhotoItem
 import com.example.flickrfinder.ui.theme.FlickrFinderTheme
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,23 +34,30 @@ class FlickrAppActivity : ComponentActivity() {
 @Composable
 fun FlickrAppLayout(navigationViewModel: PhotoViewModel = hiltViewModel()) {
     FlickrFinderTheme {
-        // A surface container using the 'background' color from the theme
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-            Greeting("Android", navigationViewModel)
-        }
-    }
-}
+        navigationViewModel.fetchData()
+        val listState = rememberLazyGridState()
 
-@Composable
-fun Greeting(name: String, navigationViewModel: PhotoViewModel) {
-    navigationViewModel.hello()
-    Text(text = "Hello $name!")
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            state = listState,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(25.dp),
+            contentPadding = PaddingValues(vertical = 33.dp, horizontal = 54.dp)
+        ) {
+            items(navigationViewModel.photosList) { item ->
+                PhotoItem(item) { photoItem ->
+                    Log.e("ASIM", "Clicked: $photoItem")
+                }
+            }
+        }
+
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     FlickrFinderTheme {
-        Greeting("Android", hiltViewModel())
+        FlickrAppLayout(hiltViewModel())
     }
 }

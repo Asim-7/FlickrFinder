@@ -1,15 +1,15 @@
 package com.example.flickrfinder.networkclient
 
 import com.example.flickrfinder.model.PhotosResponse
-import retrofit2.Call
+import com.skydoves.sandwich.ApiResponse
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
 interface ApiCall {
 
     @GET("rest/")
-    fun requestPhotos(
+    suspend fun requestPhotos(
         @QueryMap options: Map<String, String>
-    ): Call<PhotosResponse>
+    ): ApiResponse<PhotosResponse>
 
 }
