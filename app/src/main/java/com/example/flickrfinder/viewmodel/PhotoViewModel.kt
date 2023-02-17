@@ -1,6 +1,9 @@
 package com.example.flickrfinder.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flickrfinder.model.Photo
@@ -19,7 +22,7 @@ class PhotoViewModel @Inject constructor(
     private val repository: PhotoRepository              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and FAKE repository
 ) : ViewModel() {
 
-    private var _photosList = mutableListOf<PhotoData>()
+    private var _photosList: MutableList<PhotoData> by mutableStateOf(mutableListOf())
     val photosList: List<PhotoData>
         get() = _photosList
 
