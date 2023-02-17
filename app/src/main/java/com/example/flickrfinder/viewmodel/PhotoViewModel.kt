@@ -1,6 +1,7 @@
 package com.example.flickrfinder.viewmodel
 
-import android.util.Log
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhotoViewModel @Inject constructor(
-    private val repository: PhotoRepository              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and FAKE repository
+    private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and FAKE repository
+    private val context: Context
 ) : ViewModel() {
 
     private var _photosList: MutableList<PhotoData> by mutableStateOf(mutableListOf())
@@ -40,7 +42,7 @@ class PhotoViewModel @Inject constructor(
                         }
                     }
                 } else {
-                    resultMessage = "Failed: ${data.stat}"
+                    resultMessage = "Request response: ${data.stat}"
                 }
             }.onError {
                 resultMessage = "$statusCode - ${message()}"
@@ -48,10 +50,14 @@ class PhotoViewModel @Inject constructor(
                 resultMessage = message()
             }
 
-            if (resultMessage.isNotEmpty()) Log.e("ASIM", "Result: $resultMessage")
+            if (resultMessage.isNotEmpty()) showMessage(resultMessage)
 
             _photosList = listOfPhotos
         }
+    }
+
+    private fun showMessage(resultMessage: String) {
+        Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
     }
 
     private fun itemValid(photoItem: Photo): Boolean {

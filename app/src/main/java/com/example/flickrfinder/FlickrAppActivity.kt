@@ -65,7 +65,7 @@ fun FlickrAppLayout(
                     title = title,
                     url = decodedUrl,
                     onCloseClicked = {
-                        navController.navigateSingleTopTo(MainContent.route)
+                        navController.popBackStack()
                     }
                 )
             }
