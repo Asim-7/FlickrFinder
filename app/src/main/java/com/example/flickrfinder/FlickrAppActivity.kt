@@ -1,54 +1,73 @@
 package com.example.flickrfinder
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.flickrfinder.componenet.PhotoItem
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.flickrfinder.componenet.MainView
+import com.example.flickrfinder.componenet.PhotoView
+import com.example.flickrfinder.nav.MainContent
+import com.example.flickrfinder.nav.PhotoContent
+import com.example.flickrfinder.nav.navigateSingleTopTo
 import com.example.flickrfinder.ui.theme.FlickrFinderTheme
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @AndroidEntryPoint
 class FlickrAppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            FlickrAppLayout()
+            FlickrAppLayout(rememberNavController())
         }
     }
 }
 
 @Composable
-fun FlickrAppLayout(navigationViewModel: PhotoViewModel = hiltViewModel()) {
+fun FlickrAppLayout(
+    navController: NavHostController,
+    navigationViewModel: PhotoViewModel = hiltViewModel()
+) {
     FlickrFinderTheme {
         navigationViewModel.fetchData()
-        val listState = rememberLazyGridState()
 
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(150.dp),
-            state = listState,
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(25.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(vertical = 10.dp, horizontal = 10.dp)
+        NavHost(
+            navController = navController,
+            startDestination = MainContent.route
         ) {
-            items(navigationViewModel.photosList) { item ->
-                PhotoItem(item) { photoItem ->
-                    Log.e("ASIM", "Clicked: $photoItem")
-                }
+            composable(route = MainContent.route) {
+                MainView(
+                    navigationViewModel = navigationViewModel,
+                    onItemClicked = {
+                        val encodedUrl = URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())
+                        navController.navigateSingleTopTo("${PhotoContent.route}/${it.title}/$encodedUrl")
+                    }
+                )
+            }
+
+            composable(
+                route = PhotoContent.routeWithArgs,
+                arguments = PhotoContent.arguments
+            ) { navBackStack ->
+                val title = navBackStack.arguments?.getString("title")!!
+                val url = navBackStack.arguments?.getString("url")!!
+                val decodedUrl = URLDecoder.decode(url, StandardCharsets.UTF_8.toString())
+                PhotoView(
+                    title = title,
+                    url = decodedUrl,
+                    onCloseClicked = {
+                        navController.navigateSingleTopTo(MainContent.route)
+                    }
+                )
             }
         }
 
@@ -59,6 +78,6 @@ fun FlickrAppLayout(navigationViewModel: PhotoViewModel = hiltViewModel()) {
 @Composable
 fun DefaultPreview() {
     FlickrFinderTheme {
-        FlickrAppLayout(hiltViewModel())
+        FlickrAppLayout(rememberNavController(), hiltViewModel())
     }
 }
