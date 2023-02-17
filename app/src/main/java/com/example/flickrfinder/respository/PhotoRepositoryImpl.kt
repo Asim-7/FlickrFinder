@@ -15,6 +15,8 @@ class PhotoRepositoryImpl @Inject constructor(private val appContext: Context) :
 
     private val networkApiClient = ApiClient.getRoomClient().create(ApiCall::class.java)
     private val API_KEY = ""      // TODO keep this safe
+    private val PER_PAGE_LIMIT = "25"
+    private var currentPage = 1
     private var searchString = "nature"
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -31,7 +33,7 @@ class PhotoRepositoryImpl @Inject constructor(private val appContext: Context) :
                         }
 
                         override fun onFailure(call: Call<PhotosResponse>, t: Throwable) {
-                            // implement later
+                            Log.e("ASIM", "Failed: ${t.message}")
                         }
                     })
             } catch (e: Exception) {
@@ -44,10 +46,11 @@ class PhotoRepositoryImpl @Inject constructor(private val appContext: Context) :
         val dataMap: MutableMap<String, String> = HashMap()
         dataMap["method"] = "flickr.photos.search"
         dataMap["format"] = "json"
-        dataMap["nojsoncallback"] = 1.toString()
+        dataMap["nojsoncallback"] = "1"     // returns raw json with no function wrapper
         dataMap["text"] = searchString
         dataMap["extras"] = "url_h"
-        dataMap["per_page"] = 25.toString()
+        dataMap["per_page"] = PER_PAGE_LIMIT
+        dataMap["page"] = currentPage.toString()
         dataMap["api_key"] = API_KEY
         return dataMap
     }
