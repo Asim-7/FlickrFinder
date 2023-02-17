@@ -2,10 +2,11 @@ package com.example.flickrfinder.respository
 
 import android.content.Context
 import android.util.Log
+import com.example.flickrfinder.model.Photo
+import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.model.PhotosResponse
 import com.example.flickrfinder.networkclient.ApiCall
 import com.example.flickrfinder.networkclient.ApiClient
-import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,25 +20,48 @@ class PhotoRepositoryImpl @Inject constructor(private val appContext: Context) :
     private var currentPage = 1
     private var searchString = "nature"
 
-    @OptIn(DelicateCoroutinesApi::class)
-    override fun getPhotos() {
-        GlobalScope.launch {
-            try {
-                networkApiClient
-                    .requestPhotos(getOptions())
-                    .enqueue(object : Callback<PhotosResponse> {
-                        override fun onResponse(call: Call<PhotosResponse>, response: Response<PhotosResponse>) {
+    override fun getPhotos(): List<PhotoData> {
+        val listOfPhotos = mutableListOf<PhotoData>()
+        try {
+            networkApiClient
+                .requestPhotos(getOptions())
+                .enqueue(object : Callback<PhotosResponse> {
+                    override fun onResponse(call: Call<PhotosResponse>, response: Response<PhotosResponse>) {
+                        val responseStat = response.body()!!.stat
+
+                        if (responseStat == "ok") {
                             val responseData = response.body()!!.photos
 
+                            responseData.photo.forEach {
+                                if (itemValid(it)) {
+                                    listOfPhotos.add(PhotoData(it.title!!, it.url_h!!))
+                                }
+                            }
                             Log.e("ASIM", "response: $responseData")
+                        } else {
+
+                            Log.e("ASIM", "Status: $responseStat")
+
                         }
 
-                        override fun onFailure(call: Call<PhotosResponse>, t: Throwable) {
-                            Log.e("ASIM", "Failed: ${t.message}")
-                        }
-                    })
-            } catch (e: Exception) {
-                Log.e("ASIM", "Exception: $e")
+                    }
+
+                    override fun onFailure(call: Call<PhotosResponse>, t: Throwable) {
+                        Log.e("ASIM", "Failed: ${t.message}")
+                    }
+                })
+        } catch (e: Exception) {
+            Log.e("ASIM", "Exception: $e")
+        }
+        return listOfPhotos
+    }
+
+    private fun itemValid(photoItem: Photo): Boolean {
+        with(photoItem) {
+            return when {
+                url_h.isNullOrEmpty() || title.isNullOrEmpty() || width_h == null || height_h == null -> false
+                width_h < 10 || height_h < 10 -> false
+                else -> true
             }
         }
     }
