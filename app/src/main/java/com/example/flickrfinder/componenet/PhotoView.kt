@@ -34,9 +34,10 @@ fun PhotoView(
         Text(
             text = title,
             modifier = Modifier
+                .padding(start = 20.dp, end = 20.dp, top = 5.dp, bottom = 5.dp)
                 .background(WhiteShadow)
-                .width(150.dp)
-                .padding(5.dp)
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp, top = 5.dp, bottom = 5.dp)
                 .horizontalScroll(scroll),
             textAlign = TextAlign.Center
         )
