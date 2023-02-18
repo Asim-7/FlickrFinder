@@ -31,13 +31,17 @@ class PhotoViewModel @Inject constructor(
     val photosList: List<PhotoData>
         get() = _photosList
 
-    private var _searchTextState by mutableStateOf("Nature")
-    val searchTextValue: String
-        get() = _searchTextState
+    var searchTextValue = ""
 
-    fun fetchData(context: Context) {
+    fun fetchData(context: Context, search: String) {
+        if (isNetworkConnected(context)) performNetworkCall(context, search)
+        else showMessage("No internet connection", context)
+    }
+
+    private fun performNetworkCall(context: Context, search: String) {
+        searchTextValue = search
         viewModelScope.launch {
-            val response = repository.getPhotos(searchTextValue)
+            val response = repository.getPhotos(search)
             val listOfPhotos = mutableListOf<PhotoData>()
             var resultMessage = ""
 
@@ -58,15 +62,14 @@ class PhotoViewModel @Inject constructor(
                 resultMessage = message()
             }
 
-            _photosList = listOfPhotos
-
             withContext(Dispatchers.Main) {
+                _photosList = listOfPhotos
                 if (resultMessage.isNotEmpty()) showMessage(resultMessage, context)
             }
         }
     }
 
-    fun showMessage(resultMessage: String, context: Context) {
+    private fun showMessage(resultMessage: String, context: Context) {
         Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
     }
 
@@ -80,7 +83,7 @@ class PhotoViewModel @Inject constructor(
         }
     }
 
-    fun isNetworkConnected(context: Context): Boolean {
+    private fun isNetworkConnected(context: Context): Boolean {
         return context.currentConnectivityState
     }
 

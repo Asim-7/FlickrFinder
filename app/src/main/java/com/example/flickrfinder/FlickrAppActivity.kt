@@ -42,8 +42,7 @@ fun FlickrAppLayout(
 ) {
     FlickrFinderTheme {
         val context = LocalContext.current
-        if (navigationViewModel.isNetworkConnected(context)) navigationViewModel.fetchData(context)
-        else navigationViewModel.showMessage("No internet connection", context)
+        navigationViewModel.fetchData(context, "nature")
 
         NavHost(
             navController = navController,
@@ -81,6 +80,7 @@ fun FlickrAppLayout(
             composable(route = SearchContent.route) {
                 SearchView(
                     onSubmitSearch = {
+                        navigationViewModel.fetchData(context, it)
                         navController.popBackStack(route = MainContent.route, inclusive = false)
                     }
                 )
