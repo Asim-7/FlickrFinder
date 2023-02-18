@@ -12,6 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
@@ -114,6 +116,11 @@ fun QuerySearch(
 ) {
 
     var showClearButton by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 
     OutlinedTextField(
         modifier = modifier
@@ -121,7 +128,8 @@ fun QuerySearch(
             .padding(start = 20.dp, end = 20.dp, top = 20.dp)
             .onFocusChanged { focusState ->
                 showClearButton = (focusState.isFocused)
-            },
+            }
+            .focusRequester(focusRequester),
         value = query,
         onValueChange = onQueryChanged,
         label = { Text(text = label) },
