@@ -31,7 +31,16 @@ class PhotoViewModel @Inject constructor(
     val photosList: List<PhotoData>
         get() = _photosList
 
+    private var _queryListState: MutableList<String> by mutableStateOf(mutableListOf())
+    val queryList: List<String>
+        get() = _queryListState
+
+    private var _searchItemState by mutableStateOf("")
+    val searchItemValue: String
+        get() = _searchItemState
+
     var searchTextValue = ""
+    private var predictionsList = mutableListOf<String>()
 
     fun fetchData(context: Context, search: String) {
         if (isNetworkConnected(context)) performNetworkCall(context, search)
@@ -104,6 +113,17 @@ class PhotoViewModel @Inject constructor(
         }
 
         return connected
+    }
+
+    fun updateSearchItem(text: String) {
+        val listContains = predictionsList.filter { it.lowercase().startsWith(text.lowercase()) }
+        _queryListState = listContains.toMutableList()
+        _searchItemState = text
+    }
+
+    fun addPrediction(text: String) {
+        val itemAlreadyPresent = predictionsList.map { it.lowercase() }.contains(text.lowercase())
+        if (!itemAlreadyPresent) predictionsList.add(text)
     }
 
 }

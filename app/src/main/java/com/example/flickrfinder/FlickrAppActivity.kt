@@ -56,6 +56,7 @@ fun FlickrAppLayout(
                         navController.navigateSingleTopTo("${PhotoContent.route}/${it.title}/$encodedUrl")
                     },
                     onSearchClicked = {
+                        navigationViewModel.updateSearchItem("")
                         navController.navigateSingleTopTo(SearchContent.route)
                     }
                 )
@@ -79,7 +80,9 @@ fun FlickrAppLayout(
 
             composable(route = SearchContent.route) {
                 SearchView(
+                    navigationViewModel = navigationViewModel,
                     onSubmitSearch = {
+                        navigationViewModel.addPrediction(it)
                         navigationViewModel.fetchData(context, it)
                         navController.popBackStack(route = MainContent.route, inclusive = false)
                     }
