@@ -57,7 +57,7 @@ fun MainView(
 fun TitleText(navigationViewModel: PhotoViewModel) {
     val scroll = rememberScrollState(0)
     Text(
-        text = navigationViewModel.searchTextValue,
+        text = navigationViewModel.titleText,
         modifier = Modifier
             .width(200.dp)
             .padding(5.dp)

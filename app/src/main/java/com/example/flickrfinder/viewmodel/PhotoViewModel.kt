@@ -39,7 +39,7 @@ class PhotoViewModel @Inject constructor(
     val searchItemValue: String
         get() = _searchItemState
 
-    var searchTextValue = ""
+    var titleText = ""
     private var predictionsList = mutableListOf<String>()
 
     fun fetchData(context: Context, search: String) {
@@ -48,7 +48,7 @@ class PhotoViewModel @Inject constructor(
     }
 
     private fun performNetworkCall(context: Context, search: String) {
-        searchTextValue = search
+        titleText = search
         viewModelScope.launch {
             val response = repository.getPhotos(search)
             val listOfPhotos = mutableListOf<PhotoData>()
