@@ -42,7 +42,8 @@ fun FlickrAppLayout(
 ) {
     FlickrFinderTheme {
         val context = LocalContext.current
-        navigationViewModel.fetchData(context)
+        if (navigationViewModel.isNetworkConnected(context)) navigationViewModel.fetchData(context)
+        else navigationViewModel.showMessage("No internet connection", context)
 
         NavHost(
             navController = navController,

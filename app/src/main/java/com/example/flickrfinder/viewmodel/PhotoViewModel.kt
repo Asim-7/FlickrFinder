@@ -1,6 +1,8 @@
 package com.example.flickrfinder.viewmodel
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,7 +66,7 @@ class PhotoViewModel @Inject constructor(
         }
     }
 
-    private fun showMessage(resultMessage: String, context: Context) {
+    fun showMessage(resultMessage: String, context: Context) {
         Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
     }
 
@@ -76,6 +78,29 @@ class PhotoViewModel @Inject constructor(
                 else -> true
             }
         }
+    }
+
+    fun isNetworkConnected(context: Context): Boolean {
+        return context.currentConnectivityState
+    }
+
+    /** Network utility to get current state of internet connection */
+    private val Context.currentConnectivityState: Boolean
+        get() {
+            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            return getCurrentConnectivityState(connectivityManager)
+        }
+
+    private fun getCurrentConnectivityState(
+        connectivityManager: ConnectivityManager
+    ): Boolean {
+        val connected = connectivityManager.allNetworks.any { network ->
+            connectivityManager.getNetworkCapabilities(network)
+                ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                ?: false
+        }
+
+        return connected
     }
 
 }

@@ -2,10 +2,6 @@ package com.example.flickrfinder.componenet
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -50,7 +46,7 @@ fun MainView(
                 .height(10.dp)
         )
 
-        PhotoGrid(
+        MainPhotoView(
             navigationViewModel = navigationViewModel,
             onItemClicked = onItemClicked
         )
@@ -83,27 +79,4 @@ fun SearchButton(onSearchClicked: () -> Unit) {
         imageVector = Icons.Default.Search,
         contentDescription = "search"
     )
-}
-
-@Composable
-fun PhotoGrid(
-    navigationViewModel: PhotoViewModel,
-    onItemClicked: (photo: PhotoData) -> Unit
-) {
-    val listState = rememberLazyGridState()
-
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(150.dp),
-        state = listState,
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(25.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(vertical = 10.dp, horizontal = 10.dp)
-    ) {
-        items(navigationViewModel.photosList) { item ->
-            PhotoItem(item) { photoItem ->
-                onItemClicked(photoItem)
-            }
-        }
-    }
 }
