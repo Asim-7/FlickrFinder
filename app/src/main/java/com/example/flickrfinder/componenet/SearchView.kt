@@ -1,5 +1,7 @@
 package com.example.flickrfinder.componenet
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,10 +13,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -65,46 +69,51 @@ fun <T> AutoCompleteTextView(
     itemContent: @Composable (T) -> Unit = {}
 ) {
 
-    val view = LocalView.current
-    val lazyListState = rememberLazyListState()
-    LazyColumn(
-        state = lazyListState,
-        modifier = modifier.heightIn(max = TextFieldDefaults.MinHeight * 6)
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        val view = LocalView.current
 
-        item {
-            QuerySearch(
-                query = query,
-                label = queryLabel,
-                onQueryChanged = onQueryChanged,
-                onDoneActionClick = {
-                    view.clearFocus()
-                    onDoneActionClick()
-                },
-                onClearClick = {
-                    onClearClick()
-                }
-            )
-        }
+        QuerySearch(
+            query = query,
+            label = queryLabel,
+            onQueryChanged = onQueryChanged,
+            onDoneActionClick = {
+                view.clearFocus()
+                onDoneActionClick()
+            },
+            onClearClick = {
+                onClearClick()
+            }
+        )
 
-        if (predictions.isNotEmpty()) {
-            items(predictions) { prediction ->
-                Row(
-                    Modifier
-                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 5.dp)
-                        .fillMaxWidth()
-                        .clickable {
-                            view.clearFocus()
-                            onItemClick(prediction)
-                        }
-                ) {
-                    itemContent(prediction)
+        val lazyListState = rememberLazyListState()
+        LazyColumn(
+            state = lazyListState,
+            modifier = modifier
+                .heightIn(max = TextFieldDefaults.MinHeight * 6)
+                .padding(top = 5.dp)
+        ) {
+
+            if (predictions.isNotEmpty()) {
+                items(predictions) { prediction ->
+                    Row(
+                        Modifier
+                            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 5.dp)
+                            .fillMaxWidth()
+                            .clickable {
+                                view.clearFocus()
+                                onItemClick(prediction)
+                            }
+                    ) {
+                        itemContent(prediction)
+                    }
                 }
             }
         }
     }
+
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun QuerySearch(
     modifier: Modifier = Modifier,
@@ -117,6 +126,7 @@ fun QuerySearch(
 
     var showClearButton by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -144,7 +154,11 @@ fun QuerySearch(
 
         },
         keyboardActions = KeyboardActions(onDone = {
-            onDoneActionClick()
+            focusRequester.freeFocus()
+            keyboardController?.hide()
+            Handler(Looper.getMainLooper()).postDelayed({       // handler added to hide keyboard correctly
+                onDoneActionClick()
+            }, 0)
         }),
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Done,
