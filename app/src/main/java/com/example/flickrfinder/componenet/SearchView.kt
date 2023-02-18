@@ -41,7 +41,11 @@ fun SearchView(
             onSubmitSearch(text)
         }
     ) {
-        Text(it, fontSize = 14.sp)
+        Text(
+            text = it,
+            modifier = Modifier.padding(start = 10.dp),
+            fontSize = 14.sp
+        )
     }
 
 }
@@ -85,7 +89,7 @@ fun <T> AutoCompleteTextView(
             items(predictions) { prediction ->
                 Row(
                     Modifier
-                        .padding(8.dp)
+                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 5.dp)
                         .fillMaxWidth()
                         .clickable {
                             view.clearFocus()
@@ -113,6 +117,8 @@ fun QuerySearch(
 
     OutlinedTextField(
         modifier = modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp)
             .onFocusChanged { focusState ->
                 showClearButton = (focusState.isFocused)
             },
