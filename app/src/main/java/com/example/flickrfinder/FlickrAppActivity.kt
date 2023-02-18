@@ -13,8 +13,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.flickrfinder.componenet.MainView
 import com.example.flickrfinder.componenet.PhotoView
+import com.example.flickrfinder.componenet.SearchView
 import com.example.flickrfinder.nav.MainContent
 import com.example.flickrfinder.nav.PhotoContent
+import com.example.flickrfinder.nav.SearchContent
 import com.example.flickrfinder.nav.navigateSingleTopTo
 import com.example.flickrfinder.ui.theme.FlickrFinderTheme
 import com.example.flickrfinder.viewmodel.PhotoViewModel
@@ -52,6 +54,9 @@ fun FlickrAppLayout(
                     onItemClicked = {
                         val encodedUrl = URLEncoder.encode(it.url_large, StandardCharsets.UTF_8.toString())
                         navController.navigateSingleTopTo("${PhotoContent.route}/${it.title}/$encodedUrl")
+                    },
+                    onSearchClicked = {
+                        navController.navigateSingleTopTo(SearchContent.route)
                     }
                 )
             }
@@ -68,6 +73,14 @@ fun FlickrAppLayout(
                     url = decodedUrl,
                     onCloseClicked = {
                         navController.popBackStack()
+                    }
+                )
+            }
+
+            composable(route = SearchContent.route) {
+                SearchView(
+                    onSubmitSearch = {
+                        navController.popBackStack(route = MainContent.route, inclusive = false)
                     }
                 )
             }

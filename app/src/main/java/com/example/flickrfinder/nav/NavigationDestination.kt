@@ -12,6 +12,10 @@ object MainContent : NavigationDestination {
     override val route = "mainContent"
 }
 
+object SearchContent : NavigationDestination {
+    override val route = "searchContent"
+}
+
 object PhotoContent : NavigationDestination {
     override val route = "photoContent"
     val routeWithArgs = "$route/{title}/{url}"

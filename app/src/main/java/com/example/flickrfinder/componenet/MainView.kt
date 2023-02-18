@@ -1,14 +1,15 @@
 package com.example.flickrfinder.componenet
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +24,8 @@ import com.example.flickrfinder.viewmodel.PhotoViewModel
 @Composable
 fun MainView(
     navigationViewModel: PhotoViewModel,
-    onItemClicked: (photo: PhotoData) -> Unit
+    onItemClicked: (photo: PhotoData) -> Unit,
+    onSearchClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier.wrapContentSize(),
@@ -39,7 +41,7 @@ fun MainView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TitleText(navigationViewModel = navigationViewModel)
-            SearchButton()
+            SearchButton(onSearchClicked)
         }
 
         Spacer(
@@ -72,12 +74,14 @@ fun TitleText(navigationViewModel: PhotoViewModel) {
 }
 
 @Composable
-fun SearchButton() {
-    Text(
-        text = "Search",
+fun SearchButton(onSearchClicked: () -> Unit) {
+    Icon(
         modifier = Modifier
-            .width(100.dp)
-            .padding(5.dp)
+            .width(30.dp)
+            .height(30.dp)
+            .clickable { onSearchClicked() },
+        imageVector = Icons.Default.Search,
+        contentDescription = "search"
     )
 }
 
