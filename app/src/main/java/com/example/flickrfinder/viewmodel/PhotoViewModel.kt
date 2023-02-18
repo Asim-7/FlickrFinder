@@ -15,20 +15,21 @@ import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class PhotoViewModel @Inject constructor(
     private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and FAKE repository
-    private val context: Context
 ) : ViewModel() {
 
     private var _photosList: MutableList<PhotoData> by mutableStateOf(mutableListOf())
     val photosList: List<PhotoData>
         get() = _photosList
 
-    fun fetchData() {
+    fun fetchData(context: Context) {
         viewModelScope.launch {
             val response = repository.getPhotos()
             val listOfPhotos = mutableListOf<PhotoData>()
@@ -38,7 +39,7 @@ class PhotoViewModel @Inject constructor(
                 if (data.stat == "ok") {
                     data.photos.photo.forEach {
                         if (itemValid(it)) {
-                            listOfPhotos.add(PhotoData(it.title!!, it.url_h!!))
+                            listOfPhotos.add(PhotoData(it.title!!, it.url_n!!))
                         }
                     }
                 } else {
@@ -50,21 +51,23 @@ class PhotoViewModel @Inject constructor(
                 resultMessage = message()
             }
 
-            if (resultMessage.isNotEmpty()) showMessage(resultMessage)
-
             _photosList = listOfPhotos
+
+            withContext(Dispatchers.Main) {
+                if (resultMessage.isNotEmpty()) showMessage(resultMessage, context)
+            }
         }
     }
 
-    private fun showMessage(resultMessage: String) {
+    private fun showMessage(resultMessage: String, context: Context) {
         Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
     }
 
     private fun itemValid(photoItem: Photo): Boolean {
         with(photoItem) {
             return when {
-                url_h.isNullOrEmpty() || title.isNullOrEmpty() || width_h == null || height_h == null -> false
-                width_h < 10 || height_h < 10 -> false
+                url_n.isNullOrEmpty() || title.isNullOrEmpty() || width_n == null || height_n == null -> false
+                width_n < 10 || height_n < 10 -> false
                 else -> true
             }
         }

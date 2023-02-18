@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -38,7 +39,8 @@ fun FlickrAppLayout(
     navigationViewModel: PhotoViewModel = hiltViewModel()
 ) {
     FlickrFinderTheme {
-        navigationViewModel.fetchData()
+        val context = LocalContext.current
+        navigationViewModel.fetchData(context)
 
         NavHost(
             navController = navController,

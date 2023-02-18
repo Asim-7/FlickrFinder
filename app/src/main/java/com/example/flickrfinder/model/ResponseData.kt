@@ -14,8 +14,8 @@ data class Photos(
 )
 
 data class Photo(
-    val height_h: Int?,
+    val height_n: Int?,
     val title: String?,
-    val url_h: String?,
-    val width_h: Int?
+    val url_n: String?,
+    val width_n: Int?
 )

@@ -13,7 +13,7 @@ object MainContent : NavigationDestination {
 }
 
 object PhotoContent : NavigationDestination {
-    override val route = "subjectContent"
+    override val route = "photoContent"
     val routeWithArgs = "$route/{title}/{url}"
     val arguments = listOf(
         navArgument("title") { type = NavType.StringType },
