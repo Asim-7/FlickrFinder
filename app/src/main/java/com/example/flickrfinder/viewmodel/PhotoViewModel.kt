@@ -29,9 +29,13 @@ class PhotoViewModel @Inject constructor(
     val photosList: List<PhotoData>
         get() = _photosList
 
+    private var _searchTextState by mutableStateOf("Nature")
+    val searchTextValue: String
+        get() = _searchTextState
+
     fun fetchData(context: Context) {
         viewModelScope.launch {
-            val response = repository.getPhotos()
+            val response = repository.getPhotos(searchTextValue)
             val listOfPhotos = mutableListOf<PhotoData>()
             var resultMessage = ""
 

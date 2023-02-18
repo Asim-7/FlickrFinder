@@ -12,9 +12,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.flickrfinder.model.PhotoData
-import com.example.flickrfinder.ui.theme.Teal200
 import com.example.flickrfinder.ui.theme.WhiteShadow
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 
@@ -36,7 +38,7 @@ fun MainView(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TitleText()
+            TitleText(navigationViewModel = navigationViewModel)
             SearchButton()
         }
 
@@ -54,14 +56,18 @@ fun MainView(
 }
 
 @Composable
-fun TitleText() {
+fun TitleText(navigationViewModel: PhotoViewModel) {
     val scroll = rememberScrollState(0)
     Text(
-        text = "Nature",
+        text = navigationViewModel.searchTextValue,
         modifier = Modifier
-            .background(Teal200)
+            .width(200.dp)
             .padding(5.dp)
-            .horizontalScroll(scroll)
+            .horizontalScroll(scroll),
+        style = TextStyle(
+            fontSize = 25.sp,
+            fontFamily = FontFamily.SansSerif
+        )
     )
 }
 
@@ -70,7 +76,7 @@ fun SearchButton() {
     Text(
         text = "Search",
         modifier = Modifier
-            .width(150.dp)
+            .width(100.dp)
             .padding(5.dp)
     )
 }
