@@ -39,7 +39,8 @@ class PhotoViewModel @Inject constructor(
                 if (data.stat == "ok") {
                     data.photos.photo.forEach {
                         if (itemValid(it)) {
-                            listOfPhotos.add(PhotoData(it.title!!, it.url_n!!))
+                            val largePhoto = "https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}_b.jpg"
+                            listOfPhotos.add(PhotoData(it.title!!, it.url_n!!, largePhoto))
                         }
                     }
                 } else {

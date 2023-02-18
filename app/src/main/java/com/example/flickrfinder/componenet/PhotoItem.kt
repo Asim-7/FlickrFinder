@@ -26,7 +26,7 @@ fun PhotoItem(
     ) {
         val scroll = rememberScrollState(0)
         Image(
-            painter = rememberAsyncImagePainter(item.url),
+            painter = rememberAsyncImagePainter(item.url_small),
             contentDescription = null,
             modifier = Modifier
                 .width(150.dp)

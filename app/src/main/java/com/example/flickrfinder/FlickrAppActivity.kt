@@ -50,7 +50,7 @@ fun FlickrAppLayout(
                 MainView(
                     navigationViewModel = navigationViewModel,
                     onItemClicked = {
-                        val encodedUrl = URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())
+                        val encodedUrl = URLEncoder.encode(it.url_large, StandardCharsets.UTF_8.toString())
                         navController.navigateSingleTopTo("${PhotoContent.route}/${it.title}/$encodedUrl")
                     }
                 )

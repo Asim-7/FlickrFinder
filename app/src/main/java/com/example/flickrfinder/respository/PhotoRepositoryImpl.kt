@@ -25,7 +25,7 @@ class PhotoRepositoryImpl @Inject constructor(private val appContext: Context) :
         dataMap["format"] = "json"
         dataMap["nojsoncallback"] = "1"     // returns raw json with no function wrapper
         dataMap["text"] = searchString
-        dataMap["extras"] = "url_n"         // image size: Small
+        dataMap["extras"] = "url_n"         // image size: Small (approx. width="320" height="240")
         dataMap["per_page"] = PER_PAGE_LIMIT
         dataMap["page"] = currentPage.toString()
         dataMap["api_key"] = API_KEY
