@@ -52,8 +52,12 @@ fun FlickrAppLayout(
                 MainView(
                     navigationViewModel = navigationViewModel,
                     onItemClicked = {
-                        val encodedUrl = URLEncoder.encode(it.url_large, StandardCharsets.UTF_8.toString())
-                        navController.navigateSingleTopTo("${PhotoContent.route}/${it.title}/$encodedUrl")
+                        if (navigationViewModel.isNetworkConnected(context)) {
+                            val encodedUrl = URLEncoder.encode(it.url_large, StandardCharsets.UTF_8.toString())
+                            navController.navigateSingleTopTo("${PhotoContent.route}/${it.title}/$encodedUrl")
+                        } else {
+                            navigationViewModel.showMessage("Cannot preview: No internet", context)
+                        }
                     },
                     onSearchClicked = {
                         navigationViewModel.updateSearchItem("")
