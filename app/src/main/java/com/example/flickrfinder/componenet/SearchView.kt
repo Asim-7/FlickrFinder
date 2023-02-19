@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
@@ -31,6 +32,8 @@ fun SearchView(
     navigationViewModel: PhotoViewModel,
     onSubmitSearch: (searchText: String) -> Unit
 ) {
+    val context = LocalContext.current
+
     AutoCompleteTextView(
         modifier = Modifier.fillMaxWidth(),
         query = navigationViewModel.searchItemValue,
@@ -39,6 +42,9 @@ fun SearchView(
             navigationViewModel.updateSearchItem(text)
         },
         predictions = navigationViewModel.queryList,
+        onEmptyClick = {
+            navigationViewModel.showMessage("Search empty!", context)
+        },
         onClearClick = {
             navigationViewModel.updateSearchItem("")
         },
@@ -65,6 +71,7 @@ fun <T> AutoCompleteTextView(
     queryLabel: String,
     onQueryChanged: (String) -> Unit = {},
     predictions: List<T>,
+    onEmptyClick: () -> Unit = {},
     onDoneActionClick: () -> Unit = {},
     onClearClick: () -> Unit = {},
     onItemClick: (T) -> Unit = {},
@@ -78,6 +85,7 @@ fun <T> AutoCompleteTextView(
             query = query,
             label = queryLabel,
             onQueryChanged = onQueryChanged,
+            onEmptyClick = onEmptyClick,
             onDoneActionClick = {
                 view.clearFocus()
                 onDoneActionClick()
@@ -120,6 +128,7 @@ fun QuerySearch(
     modifier: Modifier = Modifier,
     query: String,
     label: String,
+    onEmptyClick: () -> Unit = {},
     onDoneActionClick: () -> Unit = {},
     onClearClick: () -> Unit = {},
     onQueryChanged: (String) -> Unit
@@ -158,11 +167,15 @@ fun QuerySearch(
             }
         },
         keyboardActions = KeyboardActions(onDone = {
-            focusRequester.freeFocus()
-            keyboardController?.hide()
-            Handler(Looper.getMainLooper()).postDelayed({       // handler added to hide keyboard correctly
-                onDoneActionClick()
-            }, 0)
+            if (query.isEmpty()) {
+                onEmptyClick()
+            } else {
+                focusRequester.freeFocus()
+                keyboardController?.hide()
+                Handler(Looper.getMainLooper()).postDelayed({       // handler added to hide keyboard correctly
+                    onDoneActionClick()
+                }, 0)
+            }
         }),
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Done,

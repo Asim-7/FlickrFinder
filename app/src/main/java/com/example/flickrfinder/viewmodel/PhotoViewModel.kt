@@ -78,7 +78,7 @@ class PhotoViewModel @Inject constructor(
         }
     }
 
-    private fun showMessage(resultMessage: String, context: Context) {
+    fun showMessage(resultMessage: String, context: Context) {
         Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
     }
 
