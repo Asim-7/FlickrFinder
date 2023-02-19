@@ -42,9 +42,11 @@ fun SearchView(
         onClearClick = {
             navigationViewModel.updateSearchItem("")
         },
-        onDoneActionClick = { onSubmitSearch(navigationViewModel.searchItemValue) },
+        onDoneActionClick = {
+            onSubmitSearch(navigationViewModel.searchItemValue)
+        },
         onItemClick = { text ->
-            onSubmitSearch(text)
+            navigationViewModel.updateSearchItem(text)
         }
     ) {
         Text(
@@ -100,7 +102,6 @@ fun <T> AutoCompleteTextView(
                             .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 5.dp)
                             .fillMaxWidth()
                             .clickable {
-                                view.clearFocus()
                                 onItemClick(prediction)
                             }
                     ) {
