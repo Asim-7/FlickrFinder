@@ -1,13 +1,11 @@
 package com.example.flickrfinder.respository
 
-import android.content.Context
 import com.example.flickrfinder.model.PhotosResponse
 import com.example.flickrfinder.networkclient.ApiCall
 import com.example.flickrfinder.networkclient.ApiClient
 import com.skydoves.sandwich.*
-import javax.inject.Inject
 
-class PhotoRepositoryImpl @Inject constructor(private val appContext: Context) : PhotoRepository {
+class PhotoRepositoryImpl : PhotoRepository {
 
     private val networkApiClient = ApiClient.getRoomClient().create(ApiCall::class.java)
     private val API_KEY = ""      // TODO keep this safe

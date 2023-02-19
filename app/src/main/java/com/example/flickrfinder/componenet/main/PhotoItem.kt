@@ -22,6 +22,7 @@ fun PhotoItem(
     Column(modifier = Modifier
         .wrapContentSize()
         .clip(RoundedCornerShape(5.dp))
+        .border(1.dp, WhiteShadow)
         .clickable { onItemClicked(item) }
     ) {
         val scroll = rememberScrollState(0)
