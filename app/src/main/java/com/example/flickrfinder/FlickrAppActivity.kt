@@ -67,7 +67,7 @@ fun FlickrAppLayout(
                         navController.navigateSingleTopTo(SearchContent.route)
                     },
                     onLastItemReached = {
-                        navigationViewModel.loadNextPage(context)
+                        navigationViewModel.fetchData(context, navigationViewModel.titleText, true)
                     },
                     onRetryClicked = {
                         navigationViewModel.fetchData(context, navigationViewModel.titleText)

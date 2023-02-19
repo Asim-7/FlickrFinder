@@ -3,6 +3,8 @@ package com.example.flickrfinder.viewmodel
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,54 +41,68 @@ class PhotoViewModel @Inject constructor(
     val searchItemValue: String
         get() = _searchItemState
 
+    private var _showRedoState by mutableStateOf(false)
+    val showRedo: Boolean
+        get() = _showRedoState
+
     var titleText = "Nature"
     var doRequest = true
+    var inProgress = false
     private var predictionsList = mutableListOf<String>()
 
-    fun fetchData(context: Context, search: String) {
-        if (isNetworkConnected(context)) performNetworkCall(context, search, false)
-        else showMessage("No internet connection", context)
-    }
-
-    fun loadNextPage(context: Context) {
-        if (isNetworkConnected(context)) performNetworkCall(context, titleText, true)
-        else showMessage("Cannot load more items: No internet", context)
+    fun fetchData(context: Context, search: String, nextPage: Boolean = false) {
+        _showRedoState = if (isNetworkConnected(context)) {
+            performNetworkCall(context, search, nextPage)
+            false
+        } else {
+            showMessage("No internet connection", context)
+            true
+        }
     }
 
     private fun performNetworkCall(context: Context, search: String, nextPage: Boolean) {
-        titleText = search
-        viewModelScope.launch {
-            val response = repository.getPhotos(search, nextPage)
-            val listOfPhotos = mutableListOf<PhotoData>()
-            var resultMessage = ""
+        if (!inProgress) {
+            inProgress = true
+            titleText = search
 
-            response.onSuccess {
-                if (data.stat == "ok") {
-                    data.photos.photo.forEach {
-                        if (itemValid(it)) {
-                            val largePhoto = "https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}_b.jpg"
-                            listOfPhotos.add(PhotoData(it.title!!, it.url_n!!, largePhoto))
+            viewModelScope.launch {
+                val response = repository.getPhotos(search, nextPage)
+                val listOfPhotos = mutableListOf<PhotoData>()
+                var resultMessage = ""
+
+                response.onSuccess {
+                    if (data.stat == "ok") {
+                        data.photos.photo.forEach {
+                            if (itemValid(it)) {
+                                val largePhoto = "https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}_b.jpg"
+                                listOfPhotos.add(PhotoData(it.title!!, it.url_n!!, largePhoto))
+                            }
                         }
+                    } else {
+                        resultMessage = "Request response: ${data.stat}"
                     }
-                } else {
-                    resultMessage = "Request response: ${data.stat}"
+                }.onError {
+                    resultMessage = "$statusCode - ${message()}"
+                }.onException {
+                    resultMessage = message()
                 }
-            }.onError {
-                resultMessage = "$statusCode - ${message()}"
-            }.onException {
-                resultMessage = message()
-            }
 
-            withContext(Dispatchers.Main) {
-                _photosList = if (nextPage && listOfPhotos.isNotEmpty()) {
-                    var newList = photosList.toMutableList()
-                    newList.addAll(listOfPhotos)
-                    newList = newList.distinct().toMutableList()
-                    newList
-                } else {
-                    listOfPhotos
+                withContext(Dispatchers.Main) {
+                    _photosList = if (nextPage && listOfPhotos.isNotEmpty()) {
+                        var newList = photosList.toMutableList()
+                        newList.addAll(listOfPhotos)
+                        newList = newList.distinct().toMutableList()
+                        newList
+                    } else {
+                        listOfPhotos
+                    }
+                    if (resultMessage.isNotEmpty()) showMessage(resultMessage, context)
+                    _showRedoState = true
+
+                    // delay added due to toast msg on screen
+                    val delay = if (resultMessage.isEmpty()) 0 else 1500
+                    Handler(Looper.getMainLooper()).postDelayed({ inProgress = false }, delay.toLong())
                 }
-                if (resultMessage.isNotEmpty()) showMessage(resultMessage, context)
             }
         }
     }

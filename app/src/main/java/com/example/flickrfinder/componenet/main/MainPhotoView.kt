@@ -26,8 +26,8 @@ fun MainPhotoView(
     onLastItemReached: () -> Unit,
     onRetryClicked: () -> Unit
 ) {
-    if (navigationViewModel.photosList.isEmpty()) {
-        Retry(onRetryClicked = onRetryClicked)
+    if (navigationViewModel.photosList.isEmpty() && navigationViewModel.showRedo) {
+        Retry(onRetryClicked = { if (!navigationViewModel.inProgress) onRetryClicked() })
     } else {
         PhotoGrid(
             navigationViewModel = navigationViewModel,
