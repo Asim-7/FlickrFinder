@@ -65,6 +65,9 @@ fun FlickrAppLayout(
                     },
                     onLastItemReached = {
                         navigationViewModel.loadNextPage(context)
+                    },
+                    onRetryClicked = {
+                        navigationViewModel.fetchData(context, navigationViewModel.titleText)
                     }
                 )
             }

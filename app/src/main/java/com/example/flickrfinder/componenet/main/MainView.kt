@@ -25,7 +25,8 @@ fun MainView(
     navigationViewModel: PhotoViewModel,
     onItemClicked: (photo: PhotoData) -> Unit,
     onSearchClicked: () -> Unit,
-    onLastItemReached: () -> Unit
+    onLastItemReached: () -> Unit,
+    onRetryClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier.wrapContentSize(),
@@ -53,7 +54,8 @@ fun MainView(
         MainPhotoView(
             navigationViewModel = navigationViewModel,
             onItemClicked = onItemClicked,
-            onLastItemReached = onLastItemReached
+            onLastItemReached = onLastItemReached,
+            onRetryClicked = onRetryClicked
         )
     }
 }
