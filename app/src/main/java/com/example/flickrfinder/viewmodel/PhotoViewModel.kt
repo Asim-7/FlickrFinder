@@ -39,7 +39,7 @@ class PhotoViewModel @Inject constructor(
     val searchItemValue: String
         get() = _searchItemState
 
-    var titleText = ""
+    var titleText = "Nature"
     var doRequest = true
     private var predictionsList = mutableListOf<String>()
 

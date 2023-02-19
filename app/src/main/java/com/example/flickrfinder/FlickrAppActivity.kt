@@ -44,7 +44,7 @@ fun FlickrAppLayout(
         val context = LocalContext.current
         if (navigationViewModel.doRequest) {
             navigationViewModel.doRequest = false
-            navigationViewModel.fetchData(context, "nature")
+            navigationViewModel.fetchData(context, "Nature")
         }
 
         NavHost(
