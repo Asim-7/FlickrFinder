@@ -128,6 +128,7 @@ fun QuerySearch(
     var showClearButton by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val maxChar = 15
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -143,7 +144,8 @@ fun QuerySearch(
             .focusRequester(focusRequester),
         value = query,
         onValueChange = {
-            onQueryChanged(it.isAllowed())
+            val allowedString = it.isAllowed()
+            if (allowedString.length <= maxChar) onQueryChanged(allowedString)
         },
         label = { Text(text = label) },
         textStyle = MaterialTheme.typography.subtitle1,
@@ -154,7 +156,6 @@ fun QuerySearch(
                     Icon(imageVector = Icons.Filled.Close, contentDescription = "Clear")
                 }
             }
-
         },
         keyboardActions = KeyboardActions(onDone = {
             focusRequester.freeFocus()
@@ -171,4 +172,4 @@ fun QuerySearch(
 
 }
 
-private fun String.isAllowed() = filter { it.isLetter() || it.isWhitespace() }
+private fun String.isAllowed() = filter { it.isLetter() }
