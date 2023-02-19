@@ -142,7 +142,9 @@ fun QuerySearch(
             }
             .focusRequester(focusRequester),
         value = query,
-        onValueChange = onQueryChanged,
+        onValueChange = {
+            onQueryChanged(it.isAllowed())
+        },
         label = { Text(text = label) },
         textStyle = MaterialTheme.typography.subtitle1,
         singleLine = true,
@@ -168,3 +170,5 @@ fun QuerySearch(
     )
 
 }
+
+private fun String.isAllowed() = filter { it.isLetter() || it.isWhitespace() }
