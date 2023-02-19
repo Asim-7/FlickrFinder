@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -21,8 +22,12 @@ fun PhotoView(
 ) {
     Column(
         modifier = Modifier
-            .wrapContentSize()
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(20.dp)
             .clickable { onCloseClicked() },
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val scroll = rememberScrollState(0)
@@ -30,14 +35,15 @@ fun PhotoView(
             painter = rememberAsyncImagePainter(url),
             contentDescription = null,
             modifier = Modifier
-                .wrapContentSize()
-                .padding(20.dp)
-                .clip(RoundedCornerShape(5.dp))
+                .height(600.dp)
+                .width(400.dp)
+                .clip(RoundedCornerShape(5.dp)),
+            contentScale = ContentScale.Crop
         )
         Text(
             text = title,
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 5.dp, bottom = 5.dp)
+                .padding(top = 15.dp, bottom = 15.dp)
                 .background(WhiteShadow)
                 .fillMaxWidth()
                 .padding(start = 20.dp, end = 20.dp, top = 5.dp, bottom = 5.dp)
