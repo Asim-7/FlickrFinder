@@ -40,6 +40,7 @@ class PhotoViewModel @Inject constructor(
         get() = _searchItemState
 
     var titleText = ""
+    var doRequest = true
     private var predictionsList = mutableListOf<String>()
 
     fun fetchData(context: Context, search: String) {

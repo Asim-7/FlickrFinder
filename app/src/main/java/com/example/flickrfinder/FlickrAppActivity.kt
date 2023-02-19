@@ -42,7 +42,10 @@ fun FlickrAppLayout(
 ) {
     FlickrFinderTheme {
         val context = LocalContext.current
-        navigationViewModel.fetchData(context, "nature")
+        if (navigationViewModel.doRequest) {
+            navigationViewModel.doRequest = false
+            navigationViewModel.fetchData(context, "nature")
+        }
 
         NavHost(
             navController = navController,
