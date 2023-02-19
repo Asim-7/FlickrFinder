@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.flickrfinder.model.PhotoData
@@ -15,7 +16,8 @@ import com.example.flickrfinder.viewmodel.PhotoViewModel
 @Composable
 fun MainPhotoView(
     navigationViewModel: PhotoViewModel,
-    onItemClicked: (photo: PhotoData) -> Unit
+    onItemClicked: (photo: PhotoData) -> Unit,
+    onLastItemReached: () -> Unit
 ) {
     /*if (navigationViewModel.inProgressValue) {
         ProgressLoader()
@@ -28,7 +30,8 @@ fun MainPhotoView(
 
     PhotoGrid(
         navigationViewModel = navigationViewModel,
-        onItemClicked = onItemClicked
+        onItemClicked = onItemClicked,
+        onLastItemReached = onLastItemReached
     )
 
 }
@@ -45,7 +48,8 @@ fun ProgressLoader() {
 @Composable
 fun PhotoGrid(
     navigationViewModel: PhotoViewModel,
-    onItemClicked: (photo: PhotoData) -> Unit
+    onItemClicked: (photo: PhotoData) -> Unit,
+    onLastItemReached: () -> Unit
 ) {
     val listState = rememberLazyGridState()
 
@@ -60,6 +64,11 @@ fun PhotoGrid(
         items(navigationViewModel.photosList) { item ->
             PhotoItem(item) { photoItem ->
                 onItemClicked(photoItem)
+            }
+        }
+        item {
+            LaunchedEffect(true) {
+                onLastItemReached()
             }
         }
     }

@@ -14,7 +14,8 @@ class PhotoRepositoryImpl @Inject constructor(private val appContext: Context) :
     private val PER_PAGE_LIMIT = "25"
     private var currentPage = 1
 
-    override suspend fun getPhotos(searchText: String): ApiResponse<PhotosResponse> {
+    override suspend fun getPhotos(searchText: String, nextPage: Boolean): ApiResponse<PhotosResponse> {
+        currentPage = if (nextPage) (currentPage + 1) else 1
         return networkApiClient.requestPhotos(getOptions(searchText))
     }
 

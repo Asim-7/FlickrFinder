@@ -58,6 +58,9 @@ fun FlickrAppLayout(
                     onSearchClicked = {
                         navigationViewModel.updateSearchItem("")
                         navController.navigateSingleTopTo(SearchContent.route)
+                    },
+                    onLastItemReached = {
+                        navigationViewModel.loadNextPage(context)
                     }
                 )
             }
@@ -84,7 +87,11 @@ fun FlickrAppLayout(
                     onSubmitSearch = {
                         navigationViewModel.addPrediction(it)
                         navigationViewModel.fetchData(context, it)
-                        navController.popBackStack(route = MainContent.route, inclusive = false)
+                        if (navigationViewModel.isNetworkConnected(context)) {
+                            navController.navigate(route = MainContent.route) { popUpToRoute }
+                        } else {
+                            navController.popBackStack(route = MainContent.route, inclusive = false)
+                        }
                     }
                 )
             }

@@ -43,14 +43,19 @@ class PhotoViewModel @Inject constructor(
     private var predictionsList = mutableListOf<String>()
 
     fun fetchData(context: Context, search: String) {
-        if (isNetworkConnected(context)) performNetworkCall(context, search)
+        if (isNetworkConnected(context)) performNetworkCall(context, search, false)
         else showMessage("No internet connection", context)
     }
 
-    private fun performNetworkCall(context: Context, search: String) {
+    fun loadNextPage(context: Context) {
+        if (isNetworkConnected(context)) performNetworkCall(context, titleText, true)
+        else showMessage("Cannot load more items: No internet", context)
+    }
+
+    private fun performNetworkCall(context: Context, search: String, nextPage: Boolean) {
         titleText = search
         viewModelScope.launch {
-            val response = repository.getPhotos(search)
+            val response = repository.getPhotos(search, nextPage)
             val listOfPhotos = mutableListOf<PhotoData>()
             var resultMessage = ""
 
@@ -72,7 +77,14 @@ class PhotoViewModel @Inject constructor(
             }
 
             withContext(Dispatchers.Main) {
-                _photosList = listOfPhotos
+                _photosList = if (nextPage && listOfPhotos.isNotEmpty()) {
+                    var newList = photosList.toMutableList()
+                    newList.addAll(listOfPhotos)
+                    newList = newList.distinct().toMutableList()
+                    newList
+                } else {
+                    listOfPhotos
+                }
                 if (resultMessage.isNotEmpty()) showMessage(resultMessage, context)
             }
         }
@@ -92,7 +104,7 @@ class PhotoViewModel @Inject constructor(
         }
     }
 
-    private fun isNetworkConnected(context: Context): Boolean {
+    fun isNetworkConnected(context: Context): Boolean {
         return context.currentConnectivityState
     }
 

@@ -24,7 +24,8 @@ import com.example.flickrfinder.viewmodel.PhotoViewModel
 fun MainView(
     navigationViewModel: PhotoViewModel,
     onItemClicked: (photo: PhotoData) -> Unit,
-    onSearchClicked: () -> Unit
+    onSearchClicked: () -> Unit,
+    onLastItemReached: () -> Unit
 ) {
     Column(
         modifier = Modifier.wrapContentSize(),
@@ -51,7 +52,8 @@ fun MainView(
 
         MainPhotoView(
             navigationViewModel = navigationViewModel,
-            onItemClicked = onItemClicked
+            onItemClicked = onItemClicked,
+            onLastItemReached = onLastItemReached
         )
     }
 }
