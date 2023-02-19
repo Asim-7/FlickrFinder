@@ -1,4 +1,4 @@
-package com.example.flickrfinder.componenet
+package com.example.flickrfinder.componenet.main
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells

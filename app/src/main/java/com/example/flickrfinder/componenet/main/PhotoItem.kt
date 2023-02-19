@@ -1,4 +1,4 @@
-package com.example.flickrfinder.componenet
+package com.example.flickrfinder.componenet.main
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*

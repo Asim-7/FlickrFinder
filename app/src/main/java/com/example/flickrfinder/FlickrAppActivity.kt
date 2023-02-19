@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.flickrfinder.componenet.MainView
+import com.example.flickrfinder.componenet.main.MainView
 import com.example.flickrfinder.componenet.PhotoView
 import com.example.flickrfinder.componenet.SearchView
 import com.example.flickrfinder.nav.MainContent
