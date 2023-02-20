@@ -31,11 +31,11 @@ class PhotoViewModel @Inject constructor(
     private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and FAKE repository
 ) : ViewModel() {
 
-    private var _photosList: MutableList<PhotoData> by mutableStateOf(mutableListOf())
+    private var _photosList: List<PhotoData> by mutableStateOf(emptyList())
     val photosList: List<PhotoData>
         get() = _photosList
 
-    private var _queryListState: MutableList<String> by mutableStateOf(mutableListOf())
+    private var _queryListState: List<String> by mutableStateOf(emptyList())
     val queryList: List<String>
         get() = _queryListState
 
@@ -169,16 +169,16 @@ class PhotoViewModel @Inject constructor(
         val itemAlreadyPresent = predictionsList.map { it.lowercase() }.contains(text.lowercase())
         if (!itemAlreadyPresent) {
             predictionsList.add(0, text)
-            if (save) saveLocally()
+            if (save) saveLocally(text)
         }
     }
 
-    private fun saveLocally() {
+    private fun saveLocally(text: String) {
         val editor = sharedPreference.edit()
         val set: MutableSet<String> = HashSet()
         set.addAll(predictionsList)
         editor.putStringSet("predictions_list", set)
-        editor.putString("title", titleText)
+        editor.putString("title", text)
         editor.apply()
     }
 
