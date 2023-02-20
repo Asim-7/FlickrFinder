@@ -43,16 +43,12 @@ fun SearchView(
     AutoCompleteTextView(
         modifier = Modifier.fillMaxWidth(),
         query = navigationViewModel.searchItemValue,
-        queryLabel = "Search",
         onQueryChanged = { text ->
             navigationViewModel.updateSearchItem(text)
         },
         predictions = navigationViewModel.queryList,
         onEmptyClick = {
             navigationViewModel.showMessage("Search empty!", context)
-        },
-        onClearClick = {
-            navigationViewModel.updateSearchItem("")
         },
         onDoneActionClick = {
             onSubmitSearch(navigationViewModel.searchItemValue)
@@ -74,12 +70,10 @@ fun SearchView(
 fun <T> AutoCompleteTextView(
     modifier: Modifier,
     query: String,
-    queryLabel: String,
     onQueryChanged: (String) -> Unit = {},
     predictions: List<T>,
     onEmptyClick: () -> Unit = {},
     onDoneActionClick: () -> Unit = {},
-    onClearClick: () -> Unit = {},
     onItemClick: (T) -> Unit = {},
     itemContent: @Composable (T) -> Unit = {}
 ) {
@@ -89,16 +83,12 @@ fun <T> AutoCompleteTextView(
 
         QuerySearch(
             query = query,
-            label = queryLabel,
             onQueryChanged = onQueryChanged,
             onEmptyClick = onEmptyClick,
             onDoneActionClick = {
                 view.clearFocus()
                 onDoneActionClick()
             },
-            onClearClick = {
-                onClearClick()
-            }
         )
 
         val lazyListState = rememberLazyListState()
@@ -133,10 +123,8 @@ fun <T> AutoCompleteTextView(
 fun QuerySearch(
     modifier: Modifier = Modifier,
     query: String,
-    label: String,
     onEmptyClick: () -> Unit = {},
     onDoneActionClick: () -> Unit = {},
-    onClearClick: () -> Unit = {},
     onQueryChanged: (String) -> Unit
 ) {
 
@@ -160,6 +148,7 @@ fun QuerySearch(
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
             colors = TextFieldDefaults.textFieldColors(
+                cursorColor = colorRedDark,
                 backgroundColor = colorWhite,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,

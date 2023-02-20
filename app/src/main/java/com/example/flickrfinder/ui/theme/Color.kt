@@ -9,7 +9,6 @@ val Teal200 = Color(0xFF03DAC5)
 
 val WhiteShadow = Color(0xFFF1F1F1)
 
-val colorPrimary = Color(0xFFFF7B7B)
 val colorRedDark = Color(0xFFFF7B7B)
 val colorRedLite = Color(0xFFFEA0A0)
 val colorWhite = Color(0xFFFFFFFF)
