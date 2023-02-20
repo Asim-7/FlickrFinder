@@ -66,12 +66,11 @@ class PhotoViewModel @Inject constructor(
     }
 
     fun fetchData(context: Context, search: String, nextPage: Boolean = false) {
-        _showRedoState = if (isNetworkConnected(context)) {
+        if (isNetworkConnected(context)) {
             performNetworkCall(context, search, nextPage)
-            false
         } else {
             showMessage("No internet connection", context)
-            true
+            _showRedoState = photosList.isEmpty()
         }
     }
 
@@ -111,8 +110,9 @@ class PhotoViewModel @Inject constructor(
                     } else {
                         listOfPhotos
                     }
+
                     if (resultMessage.isNotEmpty()) showMessage(resultMessage, context)
-                    _showRedoState = true
+                    _showRedoState = photosList.isEmpty()
 
                     // delay added due to toast msg on screen
                     val delay = if (resultMessage.isEmpty()) 0 else 1500
