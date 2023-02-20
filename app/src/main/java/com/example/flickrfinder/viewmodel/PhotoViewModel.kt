@@ -196,4 +196,9 @@ class PhotoViewModel @Inject constructor(
         fetchData(context, predictionsList[0])
     }
 
+    /** below functions are only used for view model testing */
+    fun getPredictionsList(): MutableList<String> {
+        return predictionsList
+    }
+
 }

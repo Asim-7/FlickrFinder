@@ -79,4 +79,10 @@ dependencies {
 
     // Constructs standardized interfaces from the Retrofit network response, allows to handle the body data, errors, and exceptional cases
     implementation 'com.github.skydoves:sandwich:1.3.2'
+
+    // to get more assertions control in unit tests
+    testImplementation "com.google.truth:truth:1.1.3"
+
+    // run tests on the same thread one after another
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 }
