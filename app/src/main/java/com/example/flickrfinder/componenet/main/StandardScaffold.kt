@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flickrfinder.model.BottomNavItem
-import com.example.flickrfinder.nav.Screen
+import com.example.flickrfinder.nav.*
 import com.example.flickrfinder.ui.theme.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -22,29 +22,30 @@ fun StandardScaffold(
     showBottomBar: Boolean = true,
     bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
-            route = Screen.HomeScreen.route,
+            route = MainContent.route,
             icon = Icons.Outlined.Home,
             contentDescription = "Home"
         ),
         BottomNavItem(
-            route = Screen.FavoriteScreen.route,
+            route = FavoriteContent.route,
             icon = Icons.Outlined.Favorite,
             contentDescription = "Favorite"
         ),
         BottomNavItem(route = ""),
         BottomNavItem(
-            route = Screen.OrderScreen.route,
+            route = OrderContent.route,
             icon = Icons.Outlined.Lock,
             contentDescription = "Order",
             alertCount = 4
         ),
         BottomNavItem(
-            route = Screen.ProfileScreen.route,
+            route = ProfileContent.route,
             icon = Icons.Outlined.Person,
             contentDescription = "Profile"
         ),
     ),
     onFabClick: () -> Unit = {},
+    onBottomNavClicked: (destRoute: String) -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Scaffold(
@@ -67,7 +68,7 @@ fun StandardScaffold(
                                 enabled = bottomNavItem.icon != null
                             ) {
                                 if (navController.currentDestination?.route != bottomNavItem.route) {
-                                    navController.navigate(bottomNavItem.route)
+                                    onBottomNavClicked(bottomNavItem.route)
                                 }
                             }
                         }
