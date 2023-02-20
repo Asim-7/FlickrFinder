@@ -29,7 +29,7 @@ fun MainView(
     onRetryClicked: () -> Unit
 ) {
     Column(
-        modifier = Modifier.wrapContentSize(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
