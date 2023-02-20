@@ -4,29 +4,26 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.flickrfinder.componenet.main.MainView
-import com.example.flickrfinder.componenet.PhotoView
-import com.example.flickrfinder.componenet.SearchView
-import com.example.flickrfinder.nav.MainContent
-import com.example.flickrfinder.nav.PhotoContent
-import com.example.flickrfinder.nav.SearchContent
-import com.example.flickrfinder.nav.navigateSingleTopTo
+import com.example.flickrfinder.componenet.main.StandardScaffold
+import com.example.flickrfinder.nav.Navigation
+import com.example.flickrfinder.nav.Screen
 import com.example.flickrfinder.ui.theme.FlickrFinderTheme
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 import com.example.flickrfinder.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.net.URLDecoder
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @AndroidEntryPoint
 class FlickrAppActivity : ComponentActivity() {
@@ -56,7 +53,29 @@ fun FlickrAppLayout(
         val context = LocalContext.current
         navigationViewModel.initData(context)
 
-        NavHost(
+        Surface(
+            color = MaterialTheme.colors.background,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+            StandardScaffold(
+                navController = navController,
+                showBottomBar = navBackStackEntry?.destination?.route in listOf(
+                    Screen.HomeScreen.route,
+                    Screen.FavoriteScreen.route,
+                    Screen.OrderScreen.route,
+                    Screen.ProfileScreen.route,
+                ),
+                onFabClick = {
+                    navController.navigate(Screen.SearchScreen.route)
+                }
+            ) {
+                Navigation(navController)
+            }
+        }
+
+        /*NavHost(
             navController = navController,
             startDestination = MainContent.route
         ) {
@@ -114,7 +133,7 @@ fun FlickrAppLayout(
                     }
                 )
             }
-        }
+        }*/
 
     }
 }
