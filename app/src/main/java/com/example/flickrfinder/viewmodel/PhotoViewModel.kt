@@ -15,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.flickrfinder.model.Photo
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.respository.PhotoRepository
+import com.example.flickrfinder.util.Constants.STORAGE_NAME
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
@@ -51,7 +52,6 @@ class PhotoViewModel @Inject constructor(
     var inProgress = false
     private var predictionsList = mutableListOf(titleText)
     private lateinit var sharedPreference: SharedPreferences
-    private val STORAGE_NAME = "LOCAL-STORAGE"
 
     fun initData(context: Context) {
         if (doRequest) {

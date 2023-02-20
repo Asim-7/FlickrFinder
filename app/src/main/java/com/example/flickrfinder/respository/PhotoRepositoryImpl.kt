@@ -3,13 +3,13 @@ package com.example.flickrfinder.respository
 import com.example.flickrfinder.model.PhotosResponse
 import com.example.flickrfinder.networkclient.ApiCall
 import com.example.flickrfinder.networkclient.ApiClient
+import com.example.flickrfinder.util.Constants.API_KEY
+import com.example.flickrfinder.util.Constants.PER_PAGE_LIMIT
 import com.skydoves.sandwich.*
 
 class PhotoRepositoryImpl : PhotoRepository {
 
     private val networkApiClient = ApiClient.getRoomClient().create(ApiCall::class.java)
-    private val API_KEY = ""      // TODO keep this safe
-    private val PER_PAGE_LIMIT = "25"
     private var currentPage = 1
 
     override suspend fun getPhotos(searchText: String, nextPage: Boolean): ApiResponse<PhotosResponse> {
