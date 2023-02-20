@@ -82,7 +82,9 @@ dependencies {
 
     // to get more assertions control in unit tests
     testImplementation "com.google.truth:truth:1.1.3"
+    androidTestImplementation "com.google.truth:truth:1.1.3"
 
     // run tests on the same thread one after another
     testImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
 }
