@@ -8,16 +8,28 @@ interface NavigationDestination {
     val route: String
 }
 
-object MainContent : NavigationDestination {
-    override val route = "mainContent"
+object HomeScreen : NavigationDestination {
+    override val route = "homeScreen"
 }
 
-object SearchContent : NavigationDestination {
-    override val route = "searchContent"
+object SearchScreen : NavigationDestination {
+    override val route = "searchScreen"
 }
 
-object PhotoContent : NavigationDestination {
-    override val route = "photoContent"
+object FavoriteScreen : NavigationDestination {
+    override val route = "favoriteScreen"
+}
+
+object NotificationScreen : NavigationDestination {
+    override val route = "notificationScreen"
+}
+
+object ProfileScreen : NavigationDestination {
+    override val route = "profileScreen"
+}
+
+object PhotoPreviewScreen : NavigationDestination {
+    override val route = "photoPreviewScreen"
     val routeWithArgs = "$route/{title}/{url}"
     val arguments = listOf(
         navArgument("title") { type = NavType.StringType },

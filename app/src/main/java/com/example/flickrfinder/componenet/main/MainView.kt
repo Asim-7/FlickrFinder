@@ -7,29 +7,30 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.ui.theme.WhiteShadow
+import com.example.flickrfinder.ui.theme.colorRedDark
+import com.example.flickrfinder.ui.theme.colorWhite
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 
 @Composable
 fun MainView(
     navigationViewModel: PhotoViewModel,
     onItemClicked: (photo: PhotoData) -> Unit,
-    onSearchClicked: () -> Unit,
     onLastItemReached: () -> Unit,
     onRetryClicked: () -> Unit
 ) {
     Column(
-        modifier = Modifier.wrapContentSize(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -42,7 +43,7 @@ fun MainView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TitleText(navigationViewModel = navigationViewModel)
-            SearchButton(onSearchClicked)
+            SearchButton()
         }
 
         Spacer(
@@ -77,18 +78,19 @@ fun TitleText(navigationViewModel: PhotoViewModel) {
 }
 
 @Composable
-fun SearchButton(onSearchClicked: () -> Unit) {
-    IconButton(
-        onClick = {
-            onSearchClicked()
-        },
+fun SearchButton() {
+    Box(
         modifier = Modifier
-            .then(Modifier.size(30.dp))
-            .border(1.dp, Color.Transparent, shape = CircleShape)
+            .size(40.dp)
+            .clip(shape = CircleShape)
+            .background(colorRedDark)
     ) {
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = "search"
-        )
+        IconButton(onClick = { }) {
+            Icon(
+                imageVector = Icons.Outlined.Star,
+                contentDescription = "",
+                tint = colorWhite
+            )
+        }
     }
 }
