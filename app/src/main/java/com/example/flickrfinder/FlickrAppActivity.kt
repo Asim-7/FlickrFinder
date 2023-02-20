@@ -3,9 +3,11 @@ package com.example.flickrfinder
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,6 +22,7 @@ import com.example.flickrfinder.nav.SearchContent
 import com.example.flickrfinder.nav.navigateSingleTopTo
 import com.example.flickrfinder.ui.theme.FlickrFinderTheme
 import com.example.flickrfinder.viewmodel.PhotoViewModel
+import com.example.flickrfinder.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -29,6 +32,15 @@ import java.nio.charset.StandardCharsets
 class FlickrAppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // this part is only for splash screen
+        val splashViewModel: SplashViewModel by viewModels()
+        installSplashScreen().apply {
+            setKeepVisibleCondition {
+                splashViewModel.isLoading.value
+            }
+        }
+
         setContent {
             FlickrAppLayout(rememberNavController())
         }
