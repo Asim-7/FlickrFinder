@@ -102,10 +102,6 @@ fun FlickrAppLayout(
                                     navigationViewModel.showMessage("Cannot preview: No internet", context)
                                 }
                             },
-                            onSearchClicked = {
-                                navigationViewModel.updateSearchItem("")
-                                navController.navigateSingleTopTo(SearchScreen.route)
-                            },
                             onLastItemReached = {
                                 navigationViewModel.fetchData(context, navigationViewModel.titleText, true)
                             },
