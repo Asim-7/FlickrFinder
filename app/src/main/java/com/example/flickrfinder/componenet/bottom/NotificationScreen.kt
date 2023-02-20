@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import com.example.flickrfinder.ui.theme.colorBlack
 
 @Composable
-fun OrderScreen (navController: NavController) {
+fun NotificationScreen (navController: NavController) {
     Box(
     modifier = Modifier
     .fillMaxSize()
@@ -24,7 +24,7 @@ fun OrderScreen (navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Order",
+                text = "Notifications",
                 style = MaterialTheme.typography.h6,
                 color = colorBlack
             )

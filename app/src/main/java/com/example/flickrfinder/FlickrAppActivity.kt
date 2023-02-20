@@ -72,7 +72,7 @@ fun FlickrAppLayout(
                 showBottomBar = navBackStackEntry?.destination?.route in listOf(
                     MainContent.route,
                     FavoriteContent.route,
-                    OrderContent.route,
+                    NotificationContent.route,
                     ProfileContent.route,
                 ),
                 onFabClick = {
@@ -153,9 +153,9 @@ fun FlickrAppLayout(
                     }
 
                     composable(
-                        route = OrderContent.route
+                        route = NotificationContent.route
                     ) {
-                        OrderScreen(navController)
+                        NotificationScreen(navController)
                     }
                     composable(
                         route = ProfileContent.route

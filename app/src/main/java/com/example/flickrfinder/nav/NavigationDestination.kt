@@ -20,8 +20,8 @@ object FavoriteContent : NavigationDestination {
     override val route = "favoriteContent"
 }
 
-object OrderContent : NavigationDestination {
-    override val route = "orderContent"
+object NotificationContent : NavigationDestination {
+    override val route = "notificationContent"
 }
 
 object ProfileContent : NavigationDestination {

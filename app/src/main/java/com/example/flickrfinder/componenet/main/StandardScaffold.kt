@@ -33,9 +33,9 @@ fun StandardScaffold(
         ),
         BottomNavItem(route = ""),
         BottomNavItem(
-            route = OrderContent.route,
-            icon = Icons.Outlined.Lock,
-            contentDescription = "Order",
+            route = NotificationContent.route,
+            icon = Icons.Outlined.Notifications,
+            contentDescription = "Notification",
             alertCount = 4
         ),
         BottomNavItem(

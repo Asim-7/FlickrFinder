@@ -35,7 +35,7 @@ fun Navigation(navController: NavHostController) {
         composable(
             route = Screen.OrderScreen.route
         ) {
-            OrderScreen(navController)
+            NotificationScreen(navController)
         }
         composable(
             route = Screen.ProfileScreen.route
