@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -57,11 +59,19 @@ fun SearchView(
             navigationViewModel.updateSearchItem(text)
         }
     ) {
-        Text(
-            text = it,
-            modifier = Modifier.padding(start = 10.dp),
-            fontSize = 14.sp
-        )
+        Row(modifier = Modifier.wrapContentSize()) {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = "",
+                tint = Color.Gray
+            )
+            Text(
+                text = it,
+                modifier = Modifier.padding(start = 10.dp),
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+        }
     }
 
 }
@@ -91,12 +101,13 @@ fun <T> AutoCompleteTextView(
             },
         )
 
+        val interactionSource = remember { MutableInteractionSource() }
         val lazyListState = rememberLazyListState()
         LazyColumn(
             state = lazyListState,
             modifier = modifier
                 .heightIn(max = TextFieldDefaults.MinHeight * 6)
-                .padding(top = 5.dp)
+                .padding(top = 5.dp, start = 5.dp, end = 5.dp)
         ) {
 
             if (predictions.isNotEmpty()) {
@@ -105,7 +116,10 @@ fun <T> AutoCompleteTextView(
                         Modifier
                             .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 5.dp)
                             .fillMaxWidth()
-                            .clickable {
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = null
+                            ) {
                                 onItemClick(prediction)
                             }
                     ) {
