@@ -21,7 +21,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.flickrfinder.ui.theme.WhiteShadow
 
 @Composable
-fun PhotoView(
+fun PhotoPreviewScreen(
     title: String,
     url: String,
     onCloseClicked: () -> Unit

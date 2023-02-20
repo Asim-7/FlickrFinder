@@ -22,24 +22,24 @@ fun StandardScaffold(
     showBottomBar: Boolean = true,
     bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
-            route = MainContent.route,
+            route = HomeScreen.route,
             icon = Icons.Outlined.Home,
             contentDescription = "Home"
         ),
         BottomNavItem(
-            route = FavoriteContent.route,
+            route = FavoriteScreen.route,
             icon = Icons.Outlined.Favorite,
             contentDescription = "Favorite"
         ),
         BottomNavItem(route = ""),
         BottomNavItem(
-            route = NotificationContent.route,
+            route = NotificationScreen.route,
             icon = Icons.Outlined.Notifications,
             contentDescription = "Notification",
             alertCount = 4
         ),
         BottomNavItem(
-            route = ProfileContent.route,
+            route = ProfileScreen.route,
             icon = Icons.Outlined.Person,
             contentDescription = "Profile"
         ),

@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.flickrfinder.componenet.PhotoView
+import com.example.flickrfinder.componenet.PhotoPreviewScreen
 import com.example.flickrfinder.componenet.SearchView
 import com.example.flickrfinder.componenet.bottom.*
 import com.example.flickrfinder.componenet.main.MainView
@@ -70,41 +70,41 @@ fun FlickrAppLayout(
             StandardScaffold(
                 navController = navController,
                 showBottomBar = navBackStackEntry?.destination?.route in listOf(
-                    MainContent.route,
-                    FavoriteContent.route,
-                    NotificationContent.route,
-                    ProfileContent.route,
+                    HomeScreen.route,
+                    FavoriteScreen.route,
+                    NotificationScreen.route,
+                    ProfileScreen.route,
                 ),
                 onFabClick = {
                     navigationViewModel.updateSearchItem("")
-                    navController.navigate(SearchContent.route)
+                    navController.navigate(SearchScreen.route)
                 },
                 onBottomNavClicked = {
-                    if (SearchContent.route == it) navigationViewModel.updateSearchItem("")
+                    if (SearchScreen.route == it) navigationViewModel.updateSearchItem("")
                     navController.navigateSingleTopTo(it)
                 }
             ) {
                 NavHost(
                     navController = navController,
-                    startDestination = MainContent.route,
+                    startDestination = HomeScreen.route,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     composable(
-                        route = MainContent.route
+                        route = HomeScreen.route
                     ) {
                         MainView(
                             navigationViewModel = navigationViewModel,
                             onItemClicked = {
                                 if (navigationViewModel.isNetworkConnected(context)) {
                                     val encodedUrl = URLEncoder.encode(it.url_large, StandardCharsets.UTF_8.toString())
-                                    navController.navigateSingleTopTo("${PhotoContent.route}/${it.title}/$encodedUrl")
+                                    navController.navigateSingleTopTo("${PhotoPreviewScreen.route}/${it.title}/$encodedUrl")
                                 } else {
                                     navigationViewModel.showMessage("Cannot preview: No internet", context)
                                 }
                             },
                             onSearchClicked = {
                                 navigationViewModel.updateSearchItem("")
-                                navController.navigateSingleTopTo(SearchContent.route)
+                                navController.navigateSingleTopTo(SearchScreen.route)
                             },
                             onLastItemReached = {
                                 navigationViewModel.fetchData(context, navigationViewModel.titleText, true)
@@ -116,13 +116,13 @@ fun FlickrAppLayout(
                     }
 
                     composable(
-                        route = PhotoContent.routeWithArgs,
-                        arguments = PhotoContent.arguments
+                        route = PhotoPreviewScreen.routeWithArgs,
+                        arguments = PhotoPreviewScreen.arguments
                     ) { navBackStack ->
                         val title = navBackStack.arguments?.getString("title")!!
                         val url = navBackStack.arguments?.getString("url")!!
                         val decodedUrl = URLDecoder.decode(url, StandardCharsets.UTF_8.toString())
-                        PhotoView(
+                        PhotoPreviewScreen(
                             title = title,
                             url = decodedUrl,
                             onCloseClicked = {
@@ -132,33 +132,33 @@ fun FlickrAppLayout(
                     }
 
                     composable(
-                        route = FavoriteContent.route
+                        route = FavoriteScreen.route
                     ) {
                         FavoriteScreen(navController)
                     }
 
-                    composable(route = SearchContent.route) {
+                    composable(route = SearchScreen.route) {
                         SearchView(
                             navigationViewModel = navigationViewModel,
                             onSubmitSearch = {
                                 navigationViewModel.addPrediction(it, true)
                                 navigationViewModel.fetchData(context, it)
                                 if (navigationViewModel.isNetworkConnected(context)) {
-                                    navController.navigate(route = MainContent.route) { popUpToRoute }
+                                    navController.navigate(route = HomeScreen.route) { popUpToRoute }
                                 } else {
-                                    navController.popBackStack(route = MainContent.route, inclusive = false)
+                                    navController.popBackStack(route = HomeScreen.route, inclusive = false)
                                 }
                             }
                         )
                     }
 
                     composable(
-                        route = NotificationContent.route
+                        route = NotificationScreen.route
                     ) {
                         NotificationScreen(navController)
                     }
                     composable(
-                        route = ProfileContent.route
+                        route = ProfileScreen.route
                     ) {
                         ProfileScreen(navController)
                     }
