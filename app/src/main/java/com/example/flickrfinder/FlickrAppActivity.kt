@@ -42,10 +42,7 @@ fun FlickrAppLayout(
 ) {
     FlickrFinderTheme {
         val context = LocalContext.current
-        if (navigationViewModel.doRequest) {
-            navigationViewModel.doRequest = false
-            navigationViewModel.fetchData(context, "Nature")
-        }
+        navigationViewModel.initData(context)
 
         NavHost(
             navController = navController,
@@ -95,7 +92,7 @@ fun FlickrAppLayout(
                 SearchView(
                     navigationViewModel = navigationViewModel,
                     onSubmitSearch = {
-                        navigationViewModel.addPrediction(it)
+                        navigationViewModel.addPrediction(it, true)
                         navigationViewModel.fetchData(context, it)
                         if (navigationViewModel.isNetworkConnected(context)) {
                             navController.navigate(route = MainContent.route) { popUpToRoute }

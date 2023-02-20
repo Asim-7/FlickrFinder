@@ -1,6 +1,7 @@
 package com.example.flickrfinder.viewmodel
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Handler
@@ -46,9 +47,23 @@ class PhotoViewModel @Inject constructor(
         get() = _showRedoState
 
     var titleText = "Nature"
-    var doRequest = true
+    private var doRequest = true
     var inProgress = false
-    private var predictionsList = mutableListOf<String>()
+    private var predictionsList = mutableListOf(titleText)
+    private lateinit var sharedPreference: SharedPreferences
+    private val STORAGE_NAME = "LOCAL-STORAGE"
+
+    fun initData(context: Context) {
+        if (doRequest) {
+            doRequest = false
+            initLocalDatabase(context)
+        }
+    }
+
+    private fun initLocalDatabase(context: Context) {
+        sharedPreference = context.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE)
+        retrieveFromLocal(context)
+    }
 
     fun fetchData(context: Context, search: String, nextPage: Boolean = false) {
         _showRedoState = if (isNetworkConnected(context)) {
@@ -150,9 +165,35 @@ class PhotoViewModel @Inject constructor(
         _searchItemState = text
     }
 
-    fun addPrediction(text: String) {
+    fun addPrediction(text: String, save: Boolean) {
         val itemAlreadyPresent = predictionsList.map { it.lowercase() }.contains(text.lowercase())
-        if (!itemAlreadyPresent) predictionsList.add(text)
+        if (!itemAlreadyPresent) {
+            predictionsList.add(0, text)
+            if (save) saveLocally()
+        }
+    }
+
+    private fun saveLocally() {
+        val editor = sharedPreference.edit()
+        val set: MutableSet<String> = HashSet()
+        set.addAll(predictionsList)
+        editor.putStringSet("predictions_list", set)
+        editor.putString("title", titleText)
+        editor.apply()
+    }
+
+    private fun retrieveFromLocal(context: Context) {
+        val set: MutableSet<String>? = sharedPreference.getStringSet("predictions_list", null)
+        if (!set.isNullOrEmpty()) {
+            set.forEach {
+                addPrediction(it, false)
+            }
+        }
+
+        val savedTitle: String? = sharedPreference.getString("title", null)
+        if (!savedTitle.isNullOrEmpty()) titleText = savedTitle
+
+        fetchData(context, predictionsList[0])
     }
 
 }
