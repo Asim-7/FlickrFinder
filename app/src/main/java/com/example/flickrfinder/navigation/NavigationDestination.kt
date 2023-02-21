@@ -1,4 +1,4 @@
-package com.example.flickrfinder.nav
+package com.example.flickrfinder.navigation
 
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType

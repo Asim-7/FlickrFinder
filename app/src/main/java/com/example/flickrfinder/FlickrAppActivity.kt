@@ -1,5 +1,6 @@
 package com.example.flickrfinder
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,25 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.flickrfinder.components.screens.PhotoPreviewScreen
-import com.example.flickrfinder.components.screens.SearchView
-import com.example.flickrfinder.components.screens.home.HomeScreen
 import com.example.flickrfinder.components.bottomnav.StandardScaffold
-import com.example.flickrfinder.components.screens.FavoriteScreen
-import com.example.flickrfinder.components.screens.NotificationScreen
-import com.example.flickrfinder.components.screens.ProfileScreen
-import com.example.flickrfinder.nav.*
+import com.example.flickrfinder.navigation.*
 import com.example.flickrfinder.ui.theme.FlickrFinderTheme
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 import com.example.flickrfinder.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.net.URLDecoder
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @AndroidEntryPoint
 class FlickrAppActivity : ComponentActivity() {
@@ -63,169 +53,38 @@ fun FlickrAppLayout(
         val context = LocalContext.current
         navigationViewModel.initData(context)
 
-        Surface(
-            color = MaterialTheme.colors.background,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
+        MainView(navController, navigationViewModel, context)
 
-            StandardScaffold(
-                navController = navController,
-                showBottomBar = navBackStackEntry?.destination?.route in listOf(
-                    HomeScreen.route,
-                    FavoriteScreen.route,
-                    NotificationScreen.route,
-                    ProfileScreen.route,
-                ),
-                onFabClick = {
-                    navigationViewModel.updateSearchItem("")
-                    navController.navigate(SearchScreen.route)
-                },
-                onBottomNavClicked = {
-                    if (SearchScreen.route == it) navigationViewModel.updateSearchItem("")
-                    navController.navigateSingleTopTo(it)
-                }
-            ) {
-                NavHost(
-                    navController = navController,
-                    startDestination = HomeScreen.route,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    composable(
-                        route = HomeScreen.route
-                    ) {
-                        HomeScreen(
-                            navigationViewModel = navigationViewModel,
-                            onItemClicked = {
-                                if (navigationViewModel.isNetworkConnected(context)) {
-                                    val encodedUrl = URLEncoder.encode(it.url_large, StandardCharsets.UTF_8.toString())
-                                    navController.navigateSingleTopTo("${PhotoPreviewScreen.route}/${it.title}/$encodedUrl")
-                                } else {
-                                    navigationViewModel.showMessage("Cannot preview: No internet", context)
-                                }
-                            },
-                            onLastItemReached = {
-                                navigationViewModel.fetchData(context, navigationViewModel.titleText, true)
-                            },
-                            onRetryClicked = {
-                                navigationViewModel.fetchData(context, navigationViewModel.titleText)
-                            }
-                        )
-                    }
+    }
+}
 
-                    composable(
-                        route = PhotoPreviewScreen.routeWithArgs,
-                        arguments = PhotoPreviewScreen.arguments
-                    ) { navBackStack ->
-                        val title = navBackStack.arguments?.getString("title")!!
-                        val url = navBackStack.arguments?.getString("url")!!
-                        val decodedUrl = URLDecoder.decode(url, StandardCharsets.UTF_8.toString())
-                        PhotoPreviewScreen(
-                            title = title,
-                            url = decodedUrl,
-                            onCloseClicked = {
-                                navController.popBackStack()
-                            }
-                        )
-                    }
+@Composable
+private fun MainView(navController: NavHostController, navigationViewModel: PhotoViewModel, context: Context) {
+    Surface(
+        color = MaterialTheme.colors.background,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-                    composable(
-                        route = FavoriteScreen.route
-                    ) {
-                        FavoriteScreen(navController)
-                    }
-
-                    composable(route = SearchScreen.route) {
-                        SearchView(
-                            navigationViewModel = navigationViewModel,
-                            onSubmitSearch = {
-                                navigationViewModel.addPrediction(it, true)
-                                navigationViewModel.fetchData(context, it)
-                                if (navigationViewModel.isNetworkConnected(context)) {
-                                    navController.navigate(route = HomeScreen.route) { popUpToRoute }
-                                } else {
-                                    navController.popBackStack(route = HomeScreen.route, inclusive = false)
-                                }
-                            }
-                        )
-                    }
-
-                    composable(
-                        route = NotificationScreen.route
-                    ) {
-                        NotificationScreen(navController)
-                    }
-                    composable(
-                        route = ProfileScreen.route
-                    ) {
-                        ProfileScreen(navController)
-                    }
-
-                }
-
-            }
-        }
-
-        /*NavHost(
+        StandardScaffold(
             navController = navController,
-            startDestination = MainContent.route
+            showBottomBar = navBackStackEntry?.destination?.route in listOf(
+                HomeScreen.route,
+                FavoriteScreen.route,
+                NotificationScreen.route,
+                ProfileScreen.route,
+            ),
+            onFabClick = {
+                navigationViewModel.updateSearchItem("")
+                navController.navigate(SearchScreen.route)
+            },
+            onBottomNavClicked = {
+                if (SearchScreen.route == it) navigationViewModel.updateSearchItem("")
+                navController.navigateSingleTopTo(it)
+            }
         ) {
-            composable(route = MainContent.route) {
-                MainView(
-                    navigationViewModel = navigationViewModel,
-                    onItemClicked = {
-                        if (navigationViewModel.isNetworkConnected(context)) {
-                            val encodedUrl = URLEncoder.encode(it.url_large, StandardCharsets.UTF_8.toString())
-                            navController.navigateSingleTopTo("${PhotoContent.route}/${it.title}/$encodedUrl")
-                        } else {
-                            navigationViewModel.showMessage("Cannot preview: No internet", context)
-                        }
-                    },
-                    onSearchClicked = {
-                        navigationViewModel.updateSearchItem("")
-                        navController.navigateSingleTopTo(SearchContent.route)
-                    },
-                    onLastItemReached = {
-                        navigationViewModel.fetchData(context, navigationViewModel.titleText, true)
-                    },
-                    onRetryClicked = {
-                        navigationViewModel.fetchData(context, navigationViewModel.titleText)
-                    }
-                )
-            }
-
-            composable(
-                route = PhotoContent.routeWithArgs,
-                arguments = PhotoContent.arguments
-            ) { navBackStack ->
-                val title = navBackStack.arguments?.getString("title")!!
-                val url = navBackStack.arguments?.getString("url")!!
-                val decodedUrl = URLDecoder.decode(url, StandardCharsets.UTF_8.toString())
-                PhotoView(
-                    title = title,
-                    url = decodedUrl,
-                    onCloseClicked = {
-                        navController.popBackStack()
-                    }
-                )
-            }
-
-            composable(route = SearchContent.route) {
-                SearchView(
-                    navigationViewModel = navigationViewModel,
-                    onSubmitSearch = {
-                        navigationViewModel.addPrediction(it, true)
-                        navigationViewModel.fetchData(context, it)
-                        if (navigationViewModel.isNetworkConnected(context)) {
-                            navController.navigate(route = MainContent.route) { popUpToRoute }
-                        } else {
-                            navController.popBackStack(route = MainContent.route, inclusive = false)
-                        }
-                    }
-                )
-            }
-        }*/
-
+            Navigation(navController, navigationViewModel, context)
+        }
     }
 }
 

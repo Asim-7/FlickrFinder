@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.flickrfinder.model.BottomNavItem
-import com.example.flickrfinder.nav.*
+import com.example.flickrfinder.navigation.*
 import com.example.flickrfinder.ui.theme.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
