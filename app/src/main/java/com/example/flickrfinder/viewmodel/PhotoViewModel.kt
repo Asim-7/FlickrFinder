@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.flickrfinder.R
 import com.example.flickrfinder.model.Photo
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.respository.PhotoRepository
@@ -69,7 +70,7 @@ class PhotoViewModel @Inject constructor(
         if (isNetworkConnected(context)) {
             performNetworkCall(context, search, nextPage)
         } else {
-            showMessage("No internet connection", context)
+            showMessage(context.getString(R.string.no_internet), context)
             _showRedoState = photosList.isEmpty()
         }
     }
@@ -93,7 +94,8 @@ class PhotoViewModel @Inject constructor(
                             }
                         }
                     } else {
-                        resultMessage = "Request response: ${data.stat}"
+                        val startText = context.getString(R.string.request_response)
+                        resultMessage = "$startText: ${data.stat}"
                     }
                 }.onError {
                     resultMessage = "$statusCode - ${message()}"
