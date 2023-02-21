@@ -1,4 +1,4 @@
-package com.example.flickrfinder.componenet.main
+package com.example.flickrfinder.components.bottomnav
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

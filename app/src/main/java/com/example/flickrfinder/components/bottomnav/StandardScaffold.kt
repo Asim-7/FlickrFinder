@@ -1,4 +1,4 @@
-package com.example.flickrfinder.componenet.main
+package com.example.flickrfinder.components.bottomnav
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxWidth

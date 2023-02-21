@@ -1,4 +1,4 @@
-package com.example.flickrfinder.componenet.bottom
+package com.example.flickrfinder.components.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,10 +13,10 @@ import androidx.navigation.NavController
 import com.example.flickrfinder.ui.theme.colorBlack
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun NotificationScreen (navController: NavController) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+    modifier = Modifier
+    .fillMaxSize()
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -24,7 +24,7 @@ fun ProfileScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Profile",
+                text = "Notifications",
                 style = MaterialTheme.typography.h6,
                 color = colorBlack
             )

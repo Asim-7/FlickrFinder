@@ -1,4 +1,4 @@
-package com.example.flickrfinder.componenet.bottom
+package com.example.flickrfinder.components.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

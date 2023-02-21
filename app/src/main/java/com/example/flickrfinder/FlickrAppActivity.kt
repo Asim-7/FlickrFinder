@@ -19,11 +19,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.flickrfinder.componenet.PhotoPreviewScreen
-import com.example.flickrfinder.componenet.SearchView
-import com.example.flickrfinder.componenet.bottom.*
-import com.example.flickrfinder.componenet.main.MainView
-import com.example.flickrfinder.componenet.main.StandardScaffold
+import com.example.flickrfinder.components.screens.PhotoPreviewScreen
+import com.example.flickrfinder.components.screens.SearchView
+import com.example.flickrfinder.components.screens.home.HomeScreen
+import com.example.flickrfinder.components.bottomnav.StandardScaffold
+import com.example.flickrfinder.components.screens.FavoriteScreen
+import com.example.flickrfinder.components.screens.NotificationScreen
+import com.example.flickrfinder.components.screens.ProfileScreen
 import com.example.flickrfinder.nav.*
 import com.example.flickrfinder.ui.theme.FlickrFinderTheme
 import com.example.flickrfinder.viewmodel.PhotoViewModel
@@ -92,7 +94,7 @@ fun FlickrAppLayout(
                     composable(
                         route = HomeScreen.route
                     ) {
-                        MainView(
+                        HomeScreen(
                             navigationViewModel = navigationViewModel,
                             onItemClicked = {
                                 if (navigationViewModel.isNetworkConnected(context)) {

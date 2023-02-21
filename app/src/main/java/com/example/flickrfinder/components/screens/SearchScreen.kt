@@ -1,4 +1,4 @@
-package com.example.flickrfinder.componenet
+package com.example.flickrfinder.components.screens
 
 import android.os.Handler
 import android.os.Looper

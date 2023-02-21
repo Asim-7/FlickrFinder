@@ -1,4 +1,4 @@
-package com.example.flickrfinder.componenet.main
+package com.example.flickrfinder.components.screens.home
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -23,7 +23,7 @@ import com.example.flickrfinder.ui.theme.colorWhite
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 
 @Composable
-fun MainView(
+fun HomeScreen(
     navigationViewModel: PhotoViewModel,
     onItemClicked: (photo: PhotoData) -> Unit,
     onLastItemReached: () -> Unit,
@@ -52,7 +52,7 @@ fun MainView(
                 .height(10.dp)
         )
 
-        MainPhotoView(
+        HomePhotoGrid(
             navigationViewModel = navigationViewModel,
             onItemClicked = onItemClicked,
             onLastItemReached = onLastItemReached,

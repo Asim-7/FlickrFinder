@@ -1,4 +1,4 @@
-package com.example.flickrfinder.componenet.main
+package com.example.flickrfinder.components.screens.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -21,7 +21,7 @@ import com.example.flickrfinder.ui.theme.colorWhite
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 
 @Composable
-fun MainPhotoView(
+fun HomePhotoGrid(
     navigationViewModel: PhotoViewModel,
     onItemClicked: (photo: PhotoData) -> Unit,
     onLastItemReached: () -> Unit,
