@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhotoViewModel @Inject constructor(
-    private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and FAKE repository
+    private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and TEST repository
 ) : ViewModel() {
 
     private var _photosList: List<PhotoData> by mutableStateOf(emptyList())
@@ -128,7 +128,7 @@ class PhotoViewModel @Inject constructor(
         Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
     }
 
-    private fun itemValid(photoItem: Photo): Boolean {
+    fun itemValid(photoItem: Photo): Boolean {
         with(photoItem) {
             return when {
                 url_n.isNullOrEmpty() || title.isNullOrEmpty() || width_n == null || height_n == null -> false
