@@ -1,6 +1,5 @@
 package com.example.flickrfinder.navigation
 
-import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,7 +15,7 @@ import java.nio.charset.StandardCharsets
 
 
 @Composable
-fun Navigation(navController: NavHostController, navigationViewModel: PhotoViewModel, context: Context) {
+fun Navigation(navController: NavHostController, navigationViewModel: PhotoViewModel) {
     NavHost(
         navController = navController,
         startDestination = HomeScreen.route,
@@ -32,14 +31,14 @@ fun Navigation(navController: NavHostController, navigationViewModel: PhotoViewM
                         val encodedUrl = URLEncoder.encode(it.url_large, StandardCharsets.UTF_8.toString())
                         navController.navigateSingleTopTo("${PhotoPreviewScreen.route}/${it.title}/$encodedUrl")
                     } else {
-                        navigationViewModel.showMessage("Cannot preview: No internet", context)
+                        navigationViewModel.showMessage("Cannot preview: No internet")
                     }
                 },
                 onLastItemReached = {
-                    navigationViewModel.fetchData(context, navigationViewModel.titleText, true)
+                    navigationViewModel.fetchData(navigationViewModel.titleText, true)
                 },
                 onRetryClicked = {
-                    navigationViewModel.fetchData(context, navigationViewModel.titleText)
+                    navigationViewModel.fetchData(navigationViewModel.titleText)
                 }
             )
         }
@@ -71,7 +70,7 @@ fun Navigation(navController: NavHostController, navigationViewModel: PhotoViewM
                 navigationViewModel = navigationViewModel,
                 onSubmitSearch = {
                     navigationViewModel.addPrediction(it, true)
-                    navigationViewModel.fetchData(context, it)
+                    navigationViewModel.fetchData(it)
                     if (navigationViewModel.isNetworkConnected()) {
                         navController.navigate(route = HomeScreen.route) { popUpToRoute }
                     } else {

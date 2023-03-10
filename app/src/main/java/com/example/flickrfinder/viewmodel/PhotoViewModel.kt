@@ -29,6 +29,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhotoViewModel @Inject constructor(
+    private val context: Context,
     private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and TEST repository
 ) : ViewModel() {
 
@@ -54,28 +55,28 @@ class PhotoViewModel @Inject constructor(
     private var predictionsList = mutableListOf(titleText)
     private lateinit var sharedPreference: SharedPreferences
 
-    fun initData(context: Context) {
+    fun initData() {
         if (doRequest) {
             doRequest = false
-            initLocalDatabase(context)
+            initLocalDatabase()
         }
     }
 
-    private fun initLocalDatabase(context: Context) {
+    private fun initLocalDatabase() {
         sharedPreference = context.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE)
-        retrieveFromLocal(context)
+        retrieveFromLocal()
     }
 
-    fun fetchData(context: Context, search: String, nextPage: Boolean = false) {
+    fun fetchData(search: String, nextPage: Boolean = false) {
         if (isNetworkConnected()) {
-            performNetworkCall(context, search, nextPage)
+            performNetworkCall(search, nextPage)
         } else {
-            showMessage(context.getString(R.string.no_internet), context)
+            showMessage(context.getString(R.string.no_internet))
             _showRedoState = photosList.isEmpty()
         }
     }
 
-    private fun performNetworkCall(context: Context, search: String, nextPage: Boolean) {
+    private fun performNetworkCall(search: String, nextPage: Boolean) {
         if (!inProgress) {
             inProgress = true
             titleText = search
@@ -113,7 +114,7 @@ class PhotoViewModel @Inject constructor(
                         listOfPhotos
                     }
 
-                    if (resultMessage.isNotEmpty()) showMessage(resultMessage, context)
+                    if (resultMessage.isNotEmpty()) showMessage(resultMessage)
                     _showRedoState = photosList.isEmpty()
 
                     // delay added due to toast msg on screen
@@ -124,7 +125,7 @@ class PhotoViewModel @Inject constructor(
         }
     }
 
-    fun showMessage(resultMessage: String, context: Context) {
+    fun showMessage(resultMessage: String) {
         Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
     }
 
@@ -165,7 +166,7 @@ class PhotoViewModel @Inject constructor(
         editor.apply()
     }
 
-    private fun retrieveFromLocal(context: Context) {
+    private fun retrieveFromLocal() {
         val set: MutableSet<String>? = sharedPreference.getStringSet("predictions_list", null)
         if (!set.isNullOrEmpty()) {
             set.forEach {
@@ -176,7 +177,7 @@ class PhotoViewModel @Inject constructor(
         val savedTitle: String? = sharedPreference.getString("title", null)
         if (!savedTitle.isNullOrEmpty()) titleText = savedTitle
 
-        fetchData(context, predictionsList[0])
+        fetchData(predictionsList[0])
     }
 
     /** below functions are only used for view model testing */

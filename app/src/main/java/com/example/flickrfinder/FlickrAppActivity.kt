@@ -1,6 +1,5 @@
 package com.example.flickrfinder
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,7 +10,6 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,16 +48,13 @@ fun FlickrAppLayout(
     navigationViewModel: PhotoViewModel = hiltViewModel()
 ) {
     FlickrFinderTheme {
-        val context = LocalContext.current
-        navigationViewModel.initData(context)
-
-        MainView(navController, navigationViewModel, context)
-
+        navigationViewModel.initData()
+        MainView(navController, navigationViewModel)
     }
 }
 
 @Composable
-private fun MainView(navController: NavHostController, navigationViewModel: PhotoViewModel, context: Context) {
+private fun MainView(navController: NavHostController, navigationViewModel: PhotoViewModel) {
     Surface(
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize()
@@ -83,7 +78,7 @@ private fun MainView(navController: NavHostController, navigationViewModel: Phot
                 navController.navigateSingleTopTo(it)
             }
         ) {
-            Navigation(navController, navigationViewModel, context)
+            Navigation(navController, navigationViewModel)
         }
     }
 }
