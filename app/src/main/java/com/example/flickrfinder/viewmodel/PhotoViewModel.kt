@@ -67,7 +67,7 @@ class PhotoViewModel @Inject constructor(
     }
 
     fun fetchData(context: Context, search: String, nextPage: Boolean = false) {
-        if (isNetworkConnected(context)) {
+        if (isNetworkConnected()) {
             performNetworkCall(context, search, nextPage)
         } else {
             showMessage(context.getString(R.string.no_internet), context)
@@ -138,27 +138,8 @@ class PhotoViewModel @Inject constructor(
         }
     }
 
-    fun isNetworkConnected(context: Context): Boolean {
-        return context.currentConnectivityState
-    }
-
-    /** Network utility to get current state of internet connection */
-    private val Context.currentConnectivityState: Boolean
-        get() {
-            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            return getCurrentConnectivityState(connectivityManager)
-        }
-
-    private fun getCurrentConnectivityState(
-        connectivityManager: ConnectivityManager
-    ): Boolean {
-        val connected = connectivityManager.allNetworks.any { network ->
-            connectivityManager.getNetworkCapabilities(network)
-                ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                ?: false
-        }
-
-        return connected
+    fun isNetworkConnected(): Boolean {
+        return repository.isNetworkConnected()
     }
 
     fun updateSearchItem(text: String) {

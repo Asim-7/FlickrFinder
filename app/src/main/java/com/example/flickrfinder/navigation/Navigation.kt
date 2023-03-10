@@ -28,7 +28,7 @@ fun Navigation(navController: NavHostController, navigationViewModel: PhotoViewM
             HomeScreen(
                 navigationViewModel = navigationViewModel,
                 onItemClicked = {
-                    if (navigationViewModel.isNetworkConnected(context)) {
+                    if (navigationViewModel.isNetworkConnected()) {
                         val encodedUrl = URLEncoder.encode(it.url_large, StandardCharsets.UTF_8.toString())
                         navController.navigateSingleTopTo("${PhotoPreviewScreen.route}/${it.title}/$encodedUrl")
                     } else {
@@ -72,7 +72,7 @@ fun Navigation(navController: NavHostController, navigationViewModel: PhotoViewM
                 onSubmitSearch = {
                     navigationViewModel.addPrediction(it, true)
                     navigationViewModel.fetchData(context, it)
-                    if (navigationViewModel.isNetworkConnected(context)) {
+                    if (navigationViewModel.isNetworkConnected()) {
                         navController.navigate(route = HomeScreen.route) { popUpToRoute }
                     } else {
                         navController.popBackStack(route = HomeScreen.route, inclusive = false)
