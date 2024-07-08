@@ -2,6 +2,8 @@
 
 ## API Key
 Add your API Key in Constants file bofore running the app.
+
+## Introduction
 - This repository is based on Jetpack Compose, MVVM, Navigation, Material design, Unit Tests and Hilt dependency injection.<br>
 - Images are shown and searched based on Flickr Image API.<br>
 - Clean architecture based on MVVM.
