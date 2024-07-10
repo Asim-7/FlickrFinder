@@ -4,11 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -47,7 +48,8 @@ fun FlickrAppLayout(
     navController: NavHostController,
     navigationViewModel: PhotoViewModel = hiltViewModel()
 ) {
-    FlickrFinderTheme {
+    val darkTheme = navigationViewModel.darkTheme.observeAsState(initial = isSystemInDarkTheme())
+    FlickrFinderTheme(darkTheme.value) {
         MainView(navController, navigationViewModel)
     }
 }
@@ -55,7 +57,6 @@ fun FlickrAppLayout(
 @Composable
 private fun MainView(navController: NavHostController, navigationViewModel: PhotoViewModel) {
     Surface(
-        color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize()
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()

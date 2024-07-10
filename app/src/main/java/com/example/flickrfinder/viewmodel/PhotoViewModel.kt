@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flickrfinder.R
@@ -37,6 +39,9 @@ class PhotoViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(FlickrUiState())
     val uiState: StateFlow<FlickrUiState> = _uiState.asStateFlow()
+
+    private val _darkTheme = MutableLiveData(false)
+    val darkTheme: LiveData<Boolean> = _darkTheme
 
     var titleText = "Nature"
     var inProgress = false
