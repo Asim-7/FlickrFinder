@@ -79,7 +79,7 @@ fun StandardScaffold(
         floatingActionButton = {
             if (showBottomBar) {
                 FloatingActionButton(
-                    backgroundColor = colorRedDark,
+                    backgroundColor = MaterialTheme.colors.primary,
                     onClick = onFabClick
                 ) {
                     Icon(

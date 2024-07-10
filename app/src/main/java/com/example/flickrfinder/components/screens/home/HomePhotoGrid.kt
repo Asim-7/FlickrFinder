@@ -40,7 +40,7 @@ fun HomePhotoGrid(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = colorRedDark)
+                CircularProgressIndicator(color = MaterialTheme.colors.primary)
             }
         }
 
@@ -66,7 +66,7 @@ fun Retry(onRetryClicked: () -> Unit) {
     ) {
         Button(
             onClick = onRetryClicked,
-            colors = ButtonDefaults.buttonColors(backgroundColor = colorRedDark),
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
             modifier = Modifier
                 .width(300.dp)
                 .height(50.dp)
