@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.example.flickrfinder.model.FlickrUiState
 import com.example.flickrfinder.model.NetworkState
 import com.example.flickrfinder.model.PhotoData
-import com.example.flickrfinder.ui.theme.colorRedDark
 import com.example.flickrfinder.ui.theme.colorWhite
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 
