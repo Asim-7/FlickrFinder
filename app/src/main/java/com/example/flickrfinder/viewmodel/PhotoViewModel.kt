@@ -1,9 +1,8 @@
 package com.example.flickrfinder.viewmodel
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -29,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhotoViewModel @Inject constructor(
-    private val context: Context,
+    private val application: Application,
     private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and TEST repository
 ) : ViewModel() {
 
@@ -63,7 +62,7 @@ class PhotoViewModel @Inject constructor(
     }
 
     private fun initLocalDatabase() {
-        sharedPreference = context.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE)
+        sharedPreference = application.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE)
         retrieveFromLocal()
     }
 
@@ -71,7 +70,7 @@ class PhotoViewModel @Inject constructor(
         if (isNetworkConnected()) {
             performNetworkCall(search, nextPage)
         } else {
-            showMessage(context.getString(R.string.no_internet))
+            showMessage(application.getString(R.string.no_internet))
             _showRedoState = photosList.isEmpty()
         }
     }
@@ -95,7 +94,7 @@ class PhotoViewModel @Inject constructor(
                             }
                         }
                     } else {
-                        val startText = context.getString(R.string.request_response)
+                        val startText = application.getString(R.string.request_response)
                         resultMessage = "$startText: ${data.stat}"
                     }
                 }.onError {
@@ -126,7 +125,7 @@ class PhotoViewModel @Inject constructor(
     }
 
     fun showMessage(resultMessage: String) {
-        Toast.makeText(context, resultMessage, Toast.LENGTH_SHORT).show()
+        Toast.makeText(application, resultMessage, Toast.LENGTH_SHORT).show()
     }
 
     fun itemValid(photoItem: Photo): Boolean {

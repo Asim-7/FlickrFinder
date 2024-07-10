@@ -20,10 +20,4 @@ object AppModule {
     @Singleton
     @Provides
     fun providePhotoRepository(@ApplicationContext context: Context) = PhotoRepositoryImpl(context) as PhotoRepository
-
-    @Singleton
-    @Provides
-    fun provideContext(@ApplicationContext context: Context): Context {
-        return context
-    }
 }
