@@ -57,8 +57,7 @@ fun StandardScaffold(
                     cutoutShape = CircleShape,
                     elevation = 0.dp
                 ) {
-                    BottomNavigation(backgroundColor = colorWhite) {
-
+                    BottomNavigation(backgroundColor = MaterialTheme.colors.surface) {
                         bottomNavItems.forEachIndexed { i, bottomNavItem ->
                             StandardBottomNavItem(
                                 icon = bottomNavItem.icon,

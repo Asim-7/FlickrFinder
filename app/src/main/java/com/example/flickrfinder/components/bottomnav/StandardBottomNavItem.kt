@@ -32,7 +32,7 @@ fun RowScope.StandardBottomNavItem(
     contentDescription: String? = null,
     selected: Boolean = false,
     alertCount: Int? = null,
-    selectedColor: Color = colorRedDark,
+    selectedColor: Color = MaterialTheme.colors.primary,
     unselectedColor: Color = Color.Gray,
     enabled: Boolean = true,
     onClick: () -> Unit
@@ -105,7 +105,7 @@ fun RowScope.StandardBottomNavItem(
                             .offset(10.dp)
                             .size(15.dp)
                             .clip(CircleShape)
-                            .background(colorRedDark)
+                            .background(MaterialTheme.colors.primary)
                     )
                 }
             }
