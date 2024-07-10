@@ -38,16 +38,12 @@ class PhotoViewModel @Inject constructor(
     val uiState: StateFlow<FlickrUiState> = _uiState.asStateFlow()
 
     var titleText = "Nature"
-    private var doRequest = true
     var inProgress = false
     private var predictionsList = mutableListOf(titleText)
     private lateinit var sharedPreference: SharedPreferences
 
-    fun initData() {
-        if (doRequest) {
-            doRequest = false
-            initLocalDatabase()
-        }
+    init {
+        initLocalDatabase()
     }
 
     private fun initLocalDatabase() {
