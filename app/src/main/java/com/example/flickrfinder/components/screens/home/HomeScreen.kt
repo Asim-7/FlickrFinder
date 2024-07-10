@@ -43,7 +43,7 @@ fun HomeScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TitleText(navigationViewModel = navigationViewModel)
-            SearchButton()
+            SearchButton(navigationViewModel = navigationViewModel)
         }
 
         Spacer(
@@ -78,14 +78,16 @@ fun TitleText(navigationViewModel: PhotoViewModel) {
 }
 
 @Composable
-fun SearchButton() {
+fun SearchButton(navigationViewModel: PhotoViewModel) {
     Box(
         modifier = Modifier
             .size(40.dp)
             .clip(shape = CircleShape)
             .background(colorRedDark)
     ) {
-        IconButton(onClick = { }) {
+        IconButton(onClick = {
+            navigationViewModel.updateTheme()
+        }) {
             Icon(
                 imageVector = Icons.Outlined.Star,
                 contentDescription = "",

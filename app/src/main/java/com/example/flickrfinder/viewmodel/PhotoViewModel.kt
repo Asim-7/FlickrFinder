@@ -52,6 +52,10 @@ class PhotoViewModel @Inject constructor(
         initLocalDatabase()
     }
 
+    fun updateTheme() {
+        _darkTheme.value = !_darkTheme.value!!
+    }
+
     private fun initLocalDatabase() {
         sharedPreference = application.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE)
         retrieveFromLocal()
