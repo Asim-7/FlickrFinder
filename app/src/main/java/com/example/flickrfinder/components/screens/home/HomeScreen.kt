@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
@@ -17,9 +18,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flickrfinder.model.PhotoData
-import com.example.flickrfinder.ui.theme.WhiteShadow
-import com.example.flickrfinder.ui.theme.colorRedDark
-import com.example.flickrfinder.ui.theme.colorWhite
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 
 @Composable
@@ -35,7 +33,7 @@ fun HomeScreen(
     ) {
         Row(
             modifier = Modifier
-                .background(WhiteShadow)
+                .background(MaterialTheme.colors.surface)
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(20.dp),
@@ -66,6 +64,7 @@ fun TitleText(navigationViewModel: PhotoViewModel) {
     val scroll = rememberScrollState(0)
     Text(
         text = navigationViewModel.titleText,
+        color = MaterialTheme.colors.onSurface,
         modifier = Modifier
             .width(200.dp)
             .padding(5.dp)
@@ -83,7 +82,7 @@ fun SearchButton(navigationViewModel: PhotoViewModel) {
         modifier = Modifier
             .size(40.dp)
             .clip(shape = CircleShape)
-            .background(colorRedDark)
+            .background(MaterialTheme.colors.primary)
     ) {
         IconButton(onClick = {
             navigationViewModel.updateTheme()
@@ -91,7 +90,7 @@ fun SearchButton(navigationViewModel: PhotoViewModel) {
             Icon(
                 imageVector = Icons.Outlined.Star,
                 contentDescription = "",
-                tint = colorWhite
+                tint = MaterialTheme.colors.onPrimary
             )
         }
     }
