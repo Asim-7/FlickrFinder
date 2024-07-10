@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.flickrfinder.model.FlickrUiState
+import com.example.flickrfinder.model.NetworkState
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.ui.theme.colorRedDark
 import com.example.flickrfinder.ui.theme.colorWhite
@@ -32,14 +34,27 @@ fun HomePhotoGrid(
 ) {
     val uiState by navigationViewModel.uiState.collectAsState()
 
-    if (uiState.showRedo) {
-        Retry(onRetryClicked = { if (!navigationViewModel.inProgress) onRetryClicked() })
-    } else {
-        PhotoGrid(
-            uiState = uiState,
-            onItemClicked = onItemClicked,
-            onLastItemReached = onLastItemReached
-        )
+    when (uiState.requestState) {
+        NetworkState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = colorRedDark)
+            }
+        }
+
+        NetworkState.Error -> {
+            Retry(onRetryClicked = { if (!navigationViewModel.inProgress) onRetryClicked() })
+        }
+
+        NetworkState.Success -> {
+            PhotoGrid(
+                uiState = uiState,
+                onItemClicked = onItemClicked,
+                onLastItemReached = onLastItemReached
+            )
+        }
     }
 }
 

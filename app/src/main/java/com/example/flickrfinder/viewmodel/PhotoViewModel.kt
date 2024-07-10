@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flickrfinder.R
 import com.example.flickrfinder.model.FlickrUiState
+import com.example.flickrfinder.model.NetworkState
 import com.example.flickrfinder.model.Photo
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.respository.PhotoRepository
@@ -58,7 +59,7 @@ class PhotoViewModel @Inject constructor(
             showMessage(application.getString(R.string.no_internet))
             _uiState.update { currentState ->
                 currentState.copy(
-                    showRedo = currentState.photosList.isEmpty()
+                    requestState = if (currentState.photosList.isEmpty()) NetworkState.Error else NetworkState.Success
                 )
             }
         }
@@ -68,6 +69,12 @@ class PhotoViewModel @Inject constructor(
         if (!inProgress) {
             inProgress = true
             titleText = search
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    requestState = NetworkState.Loading
+                )
+            }
 
             viewModelScope.launch {
                 val response = repository.getPhotos(search, nextPage)
@@ -107,7 +114,7 @@ class PhotoViewModel @Inject constructor(
                     _uiState.update { currentState ->
                         currentState.copy(
                             photosList = targetPhotosList,
-                            showRedo = targetPhotosList.isEmpty()
+                            requestState = if (targetPhotosList.isEmpty()) NetworkState.Error else NetworkState.Success
                         )
                     }
 

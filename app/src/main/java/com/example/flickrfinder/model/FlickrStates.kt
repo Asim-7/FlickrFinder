@@ -4,7 +4,6 @@ data class FlickrUiState(
     val photosList: List<PhotoData> = emptyList(),
     val queryList: List<String> = emptyList(),
     val searchItemValue: String = "",
-    val showRedo: Boolean = false,
     val requestState: NetworkState = NetworkState.Loading
 )
 
