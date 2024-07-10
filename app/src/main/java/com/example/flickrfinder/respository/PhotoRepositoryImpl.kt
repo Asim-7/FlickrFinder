@@ -17,6 +17,7 @@ class PhotoRepositoryImpl @Inject constructor(private val context: Context) : Ph
     private var currentPage = 1
 
     override suspend fun getPhotos(searchText: String, nextPage: Boolean): ApiResponse<PhotosResponse> {
+        // TODO getting next page data resulting in some problem, need to investigate
         currentPage = if (nextPage) (currentPage + 1) else 1
         return networkApiClient.requestPhotos(getOptions(searchText))
     }

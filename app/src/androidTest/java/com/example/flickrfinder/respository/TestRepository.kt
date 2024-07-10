@@ -9,4 +9,8 @@ class TestRepository : PhotoRepository {
         TODO("Not yet implemented")
     }
 
+    override fun isNetworkConnected(): Boolean {
+        TODO("Not yet implemented")
+    }
+
 }

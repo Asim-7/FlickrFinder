@@ -48,7 +48,6 @@ fun FlickrAppLayout(
     navigationViewModel: PhotoViewModel = hiltViewModel()
 ) {
     FlickrFinderTheme {
-        navigationViewModel.initData()
         MainView(navController, navigationViewModel)
     }
 }

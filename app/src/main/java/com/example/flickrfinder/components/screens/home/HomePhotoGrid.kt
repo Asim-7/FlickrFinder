@@ -8,13 +8,18 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.flickrfinder.model.FlickrUiState
+import com.example.flickrfinder.model.NetworkState
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.ui.theme.colorRedDark
 import com.example.flickrfinder.ui.theme.colorWhite
@@ -27,14 +32,29 @@ fun HomePhotoGrid(
     onLastItemReached: () -> Unit,
     onRetryClicked: () -> Unit
 ) {
-    if (navigationViewModel.showRedo) {
-        Retry(onRetryClicked = { if (!navigationViewModel.inProgress) onRetryClicked() })
-    } else {
-        PhotoGrid(
-            navigationViewModel = navigationViewModel,
-            onItemClicked = onItemClicked,
-            onLastItemReached = onLastItemReached
-        )
+    val uiState by navigationViewModel.uiState.collectAsState()
+
+    when (uiState.requestState) {
+        NetworkState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = colorRedDark)
+            }
+        }
+
+        NetworkState.Error -> {
+            Retry(onRetryClicked = { if (!navigationViewModel.inProgress) onRetryClicked() })
+        }
+
+        NetworkState.Success -> {
+            PhotoGrid(
+                uiState = uiState,
+                onItemClicked = onItemClicked,
+                onLastItemReached = onLastItemReached
+            )
+        }
     }
 }
 
@@ -65,7 +85,7 @@ fun Retry(onRetryClicked: () -> Unit) {
 
 @Composable
 fun PhotoGrid(
-    navigationViewModel: PhotoViewModel,
+    uiState: FlickrUiState,
     onItemClicked: (photo: PhotoData) -> Unit,
     onLastItemReached: () -> Unit
 ) {
@@ -79,7 +99,7 @@ fun PhotoGrid(
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         contentPadding = PaddingValues(vertical = 10.dp, horizontal = 10.dp)
     ) {
-        items(navigationViewModel.photosList) { item ->
+        items(uiState.photosList) { item ->
             PhotoItem(item) { photoItem ->
                 onItemClicked(photoItem)
             }

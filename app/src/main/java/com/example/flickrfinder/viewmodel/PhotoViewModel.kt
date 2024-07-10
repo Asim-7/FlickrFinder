@@ -6,12 +6,11 @@ import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flickrfinder.R
+import com.example.flickrfinder.model.FlickrUiState
+import com.example.flickrfinder.model.NetworkState
 import com.example.flickrfinder.model.Photo
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.respository.PhotoRepository
@@ -22,6 +21,10 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -32,33 +35,16 @@ class PhotoViewModel @Inject constructor(
     private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and TEST repository
 ) : ViewModel() {
 
-    private var _photosList: List<PhotoData> by mutableStateOf(emptyList())
-    val photosList: List<PhotoData>
-        get() = _photosList
-
-    private var _queryListState: List<String> by mutableStateOf(emptyList())
-    val queryList: List<String>
-        get() = _queryListState
-
-    private var _searchItemState by mutableStateOf("")
-    val searchItemValue: String
-        get() = _searchItemState
-
-    private var _showRedoState by mutableStateOf(false)
-    val showRedo: Boolean
-        get() = _showRedoState
+    private val _uiState = MutableStateFlow(FlickrUiState())
+    val uiState: StateFlow<FlickrUiState> = _uiState.asStateFlow()
 
     var titleText = "Nature"
-    private var doRequest = true
     var inProgress = false
     private var predictionsList = mutableListOf(titleText)
     private lateinit var sharedPreference: SharedPreferences
 
-    fun initData() {
-        if (doRequest) {
-            doRequest = false
-            initLocalDatabase()
-        }
+    init {
+        initLocalDatabase()
     }
 
     private fun initLocalDatabase() {
@@ -71,7 +57,11 @@ class PhotoViewModel @Inject constructor(
             performNetworkCall(search, nextPage)
         } else {
             showMessage(application.getString(R.string.no_internet))
-            _showRedoState = photosList.isEmpty()
+            _uiState.update { currentState ->
+                currentState.copy(
+                    requestState = if (currentState.photosList.isEmpty()) NetworkState.Error else NetworkState.Success
+                )
+            }
         }
     }
 
@@ -79,6 +69,12 @@ class PhotoViewModel @Inject constructor(
         if (!inProgress) {
             inProgress = true
             titleText = search
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    requestState = NetworkState.Loading
+                )
+            }
 
             viewModelScope.launch {
                 val response = repository.getPhotos(search, nextPage)
@@ -104,8 +100,8 @@ class PhotoViewModel @Inject constructor(
                 }
 
                 withContext(Dispatchers.Main) {
-                    _photosList = if (nextPage && listOfPhotos.isNotEmpty()) {
-                        var newList = photosList.toMutableList()
+                    val targetPhotosList = if (nextPage && listOfPhotos.isNotEmpty()) {
+                        var newList = uiState.value.photosList.toMutableList()
                         newList.addAll(listOfPhotos)
                         newList = newList.distinct().toMutableList()
                         newList
@@ -114,7 +110,13 @@ class PhotoViewModel @Inject constructor(
                     }
 
                     if (resultMessage.isNotEmpty()) showMessage(resultMessage)
-                    _showRedoState = photosList.isEmpty()
+
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            photosList = targetPhotosList,
+                            requestState = if (targetPhotosList.isEmpty()) NetworkState.Error else NetworkState.Success
+                        )
+                    }
 
                     // delay added due to toast msg on screen
                     val delay = if (resultMessage.isEmpty()) 0 else 1500
@@ -144,8 +146,12 @@ class PhotoViewModel @Inject constructor(
 
     fun updateSearchItem(text: String) {
         val listContains = predictionsList.filter { it.lowercase().startsWith(text.lowercase()) }
-        _queryListState = listContains.toMutableList()
-        _searchItemState = text
+        _uiState.update { currentState ->
+            currentState.copy(
+                queryList = listContains.toMutableList(),
+                searchItemValue = text
+            )
+        }
     }
 
     fun addPrediction(text: String, save: Boolean) {

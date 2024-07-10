@@ -39,18 +39,20 @@ fun SearchView(
     navigationViewModel: PhotoViewModel,
     onSubmitSearch: (searchText: String) -> Unit
 ) {
+    val uiState by navigationViewModel.uiState.collectAsState()
+
     AutoCompleteTextView(
         modifier = Modifier.fillMaxWidth(),
-        query = navigationViewModel.searchItemValue,
+        query = uiState.searchItemValue,
         onQueryChanged = { text ->
             navigationViewModel.updateSearchItem(text)
         },
-        predictions = navigationViewModel.queryList,
+        predictions = uiState.queryList,
         onEmptyClick = {
             navigationViewModel.showMessage("Search empty!")
         },
         onDoneActionClick = {
-            onSubmitSearch(navigationViewModel.searchItemValue)
+            onSubmitSearch(uiState.searchItemValue)
         },
         onItemClick = { text ->
             navigationViewModel.updateSearchItem(text)
