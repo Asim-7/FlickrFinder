@@ -38,9 +38,9 @@ class FlickrAppActivity : ComponentActivity() {
         // this part is only for splash screen
         val splashViewModel: SplashViewModel by viewModels()
         installSplashScreen().apply {
-            setKeepVisibleCondition {
+            /*setKeepVisibleCondition {
                 splashViewModel.isLoading.value
-            }
+            }*/
         }
 
         setContent {
