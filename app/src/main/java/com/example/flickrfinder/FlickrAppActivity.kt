@@ -27,7 +27,6 @@ import com.example.flickrfinder.ui.theme.FlickrFinderTheme
 import com.example.flickrfinder.ui.theme.colorRedDark
 import com.example.flickrfinder.ui.theme.colorRedDarker
 import com.example.flickrfinder.viewmodel.PhotoViewModel
-import com.example.flickrfinder.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,12 +35,7 @@ class FlickrAppActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // this part is only for splash screen
-        val splashViewModel: SplashViewModel by viewModels()
-        installSplashScreen().apply {
-            /*setKeepVisibleCondition {
-                splashViewModel.isLoading.value
-            }*/
-        }
+        installSplashScreen()
 
         setContent {
             FlickrAppLayout(rememberNavController())
