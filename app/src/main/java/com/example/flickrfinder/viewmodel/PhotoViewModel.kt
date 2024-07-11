@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,6 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PhotoViewModel @Inject constructor(
     private val application: Application,
+    private val sharedPreferences: SharedPreferences,
     private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and TEST repository
 ) : ViewModel() {
 
@@ -46,7 +48,6 @@ class PhotoViewModel @Inject constructor(
     var titleText = "Nature"
     var inProgress = false
     private var predictionsList = mutableListOf(titleText)
-    private lateinit var sharedPreference: SharedPreferences
 
     init {
         initLocalDatabase()
@@ -57,7 +58,6 @@ class PhotoViewModel @Inject constructor(
     }
 
     private fun initLocalDatabase() {
-        sharedPreference = application.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE)
         retrieveFromLocal()
     }
 
@@ -172,7 +172,7 @@ class PhotoViewModel @Inject constructor(
     }
 
     private fun saveLocally(text: String) {
-        val editor = sharedPreference.edit()
+        val editor = sharedPreferences.edit()
         val set: MutableSet<String> = HashSet()
         set.addAll(predictionsList)
         editor.putStringSet("predictions_list", set)
@@ -181,14 +181,14 @@ class PhotoViewModel @Inject constructor(
     }
 
     private fun retrieveFromLocal() {
-        val set: MutableSet<String>? = sharedPreference.getStringSet("predictions_list", null)
+        val set: MutableSet<String>? = sharedPreferences.getStringSet("predictions_list", null)
         if (!set.isNullOrEmpty()) {
             set.forEach {
                 addPrediction(it, false)
             }
         }
 
-        val savedTitle: String? = sharedPreference.getString("title", null)
+        val savedTitle: String? = sharedPreferences.getString("title", null)
         if (!savedTitle.isNullOrEmpty()) titleText = savedTitle
 
         fetchData(predictionsList[0])

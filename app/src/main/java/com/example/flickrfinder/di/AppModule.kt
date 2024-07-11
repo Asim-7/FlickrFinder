@@ -1,8 +1,11 @@
 package com.example.flickrfinder.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import com.example.flickrfinder.R
 import com.example.flickrfinder.respository.PhotoRepository
 import com.example.flickrfinder.respository.PhotoRepositoryImpl
+import com.example.flickrfinder.util.Constants.STORAGE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,4 +23,11 @@ object AppModule {
     @Singleton
     @Provides
     fun providePhotoRepository(@ApplicationContext context: Context) = PhotoRepositoryImpl(context) as PhotoRepository
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE)
+    }
+
 }
