@@ -12,14 +12,17 @@ Add your API Key in Constants file bofore running the app.
 - Clean architecture based on MVVM.
 
 ## Screenshots
+### Light Mode
 <div style="display: flex; justify-content: space-around;">
   <img src="https://user-images.githubusercontent.com/25628828/220268880-94daea0a-7777-438a-afbd-8aeb0bfc2139.png" alt="Screenshot 1" width="30%">
-  <img src="https://user-images.githubusercontent.com/25628828/220269120-82ba5973-2b26-4503-9c01-4ab0e9e2f4ca.png" alt="Screenshot 2" width="30%">
-  <img src="https://user-images.githubusercontent.com/25628828/220270021-7ac17bff-95e5-46a3-aafa-282985700b1b.png" alt="Screenshot 3" width="30%">
+  <img src="https://github.com/Asim-7/FlickrFinder/assets/25628828/a48790ed-eece-4c95-a9e6-6b28a3186cb3" alt="Screenshot 2" width="30%">
+  <img src="https://github.com/Asim-7/FlickrFinder/assets/25628828/818efa18-efca-4a3c-ad05-716a5842c512" alt="Screenshot 3" width="30%">
 </div>
 <br><br>
 <div style="display: flex; justify-content: space-around;">
   <img src="https://user-images.githubusercontent.com/25628828/220270050-c27f23bc-ccb3-49ac-9e70-142372e62b1a.png" alt="Screenshot 1" width="30%">
-  <img src="https://user-images.githubusercontent.com/25628828/220270074-537e8084-fd2e-4efa-9217-6ab293c192ee.png" alt="Screenshot 2" width="30%">
+  <img src="https://github.com/Asim-7/FlickrFinder/assets/25628828/4defc2c5-98e4-4f91-a7a9-12730b4fd9a0" alt="Screenshot 2" width="30%">
 </div>
+
+### Light Mode
 
