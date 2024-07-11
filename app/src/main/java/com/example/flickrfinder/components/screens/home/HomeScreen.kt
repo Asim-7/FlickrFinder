@@ -8,7 +8,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,9 +89,10 @@ fun SearchButton(navigationViewModel: PhotoViewModel) {
             navigationViewModel.updateTheme()
         }) {
             Icon(
-                imageVector = Icons.Outlined.Star,
-                contentDescription = "",
-                tint = MaterialTheme.colors.onPrimary
+                imageVector = if (navigationViewModel.darkTheme.value!!) Icons.Filled.DarkMode else Icons.Filled.LightMode,
+                contentDescription = if (navigationViewModel.darkTheme.value!!) "Switch to Light Mode" else "Switch to Dark Mode",
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colors.surface
             )
         }
     }
