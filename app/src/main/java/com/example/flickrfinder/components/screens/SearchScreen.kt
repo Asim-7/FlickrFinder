@@ -30,7 +30,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.flickrfinder.ui.theme.colorRedDark
 import com.example.flickrfinder.ui.theme.colorWhite
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 
@@ -62,13 +61,13 @@ fun SearchView(
             Icon(
                 imageVector = Icons.Filled.Search,
                 contentDescription = "",
-                tint = Color.Gray
+                tint = MaterialTheme.colors.onSurface
             )
             Text(
                 text = it,
                 modifier = Modifier.padding(start = 10.dp),
                 fontSize = 14.sp,
-                color = Color.Gray
+                color = MaterialTheme.colors.onSurface
             )
         }
     }
@@ -161,8 +160,9 @@ fun QuerySearch(
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
             colors = TextFieldDefaults.textFieldColors(
-                cursorColor = colorRedDark,
-                backgroundColor = colorWhite,
+                textColor = MaterialTheme.colors.onSurface,
+                cursorColor = MaterialTheme.colors.primary,
+                backgroundColor = MaterialTheme.colors.surface,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
             ),
@@ -170,7 +170,7 @@ fun QuerySearch(
             placeholder = {
                 Text(
                     text = "Search pictures",
-                    color = Color.Gray
+                    color = MaterialTheme.colors.onSurface
                 )
             },
             value = query,
@@ -185,7 +185,7 @@ fun QuerySearch(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(shape = CircleShape)
-                        .background(colorRedDark)
+                        .background(MaterialTheme.colors.primary)
                 ) {
                     IconButton(onClick = {
                         if (query.isEmpty()) {
