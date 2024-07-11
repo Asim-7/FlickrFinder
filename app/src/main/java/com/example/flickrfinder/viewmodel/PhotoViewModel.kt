@@ -1,12 +1,10 @@
 package com.example.flickrfinder.viewmodel
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +15,6 @@ import com.example.flickrfinder.model.NetworkState
 import com.example.flickrfinder.model.Photo
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.respository.PhotoRepository
-import com.example.flickrfinder.util.Constants.STORAGE_NAME
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
@@ -55,10 +52,12 @@ class PhotoViewModel @Inject constructor(
 
     fun updateTheme() {
         _darkTheme.value = !_darkTheme.value!!
+        saveLocallyDarkMode()
     }
 
     private fun initLocalDatabase() {
         retrieveFromLocal()
+        retrieveFromLocalDarkMode()
     }
 
     fun fetchData(search: String, nextPage: Boolean = false) {
@@ -192,6 +191,19 @@ class PhotoViewModel @Inject constructor(
         if (!savedTitle.isNullOrEmpty()) titleText = savedTitle
 
         fetchData(predictionsList[0])
+    }
+
+    private fun saveLocallyDarkMode() {
+        val editor = sharedPreferences.edit()
+        editor.putString("darkMode", darkTheme.value!!.toString())
+        editor.apply()
+    }
+
+    private fun retrieveFromLocalDarkMode() {
+        val retrievedString = sharedPreferences.getString("darkMode", null)
+        if (retrievedString != null) {
+            _darkTheme.value = retrievedString.toBoolean()
+        }
     }
 
     /** below functions are only used for view model testing */
