@@ -26,7 +26,7 @@ fun FavoriteScreen(navController: NavController) {
             Text(
                 text = "Favourites",
                 style = MaterialTheme.typography.h6,
-                color = colorBlack
+                color = MaterialTheme.colors.onSurface
             )
         }
     }

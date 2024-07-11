@@ -26,7 +26,7 @@ fun ProfileScreen(navController: NavController) {
             Text(
                 text = "Profile",
                 style = MaterialTheme.typography.h6,
-                color = colorBlack
+                color = MaterialTheme.colors.onSurface
             )
         }
     }

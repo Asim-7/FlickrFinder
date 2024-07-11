@@ -26,7 +26,7 @@ fun NotificationScreen (navController: NavController) {
             Text(
                 text = "Notifications",
                 style = MaterialTheme.typography.h6,
-                color = colorBlack
+                color = MaterialTheme.colors.onSurface
             )
         }
     }
