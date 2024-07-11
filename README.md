@@ -5,6 +5,9 @@ Add your API Key in Constants file bofore running the app.
 
 ## Introduction
 - This repository is based on Jetpack Compose, MVVM, Navigation, Material design, Unit Tests and Hilt dependency injection.<br>
+- State flows, mutable live data.<br>
+- Light and dark mode.<br>
+- Network state check, pagination and much more.<br>
 - Images are shown and searched based on Flickr Image API.<br>
 - Clean architecture based on MVVM.
 
