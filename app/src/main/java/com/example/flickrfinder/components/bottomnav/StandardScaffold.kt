@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -51,23 +52,26 @@ fun StandardScaffold(
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                BottomAppBar(
-                    modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = MaterialTheme.colors.surface,
-                    cutoutShape = CircleShape,
-                    elevation = 0.dp
-                ) {
-                    BottomNavigation(backgroundColor = MaterialTheme.colors.surface) {
-                        bottomNavItems.forEachIndexed { i, bottomNavItem ->
-                            StandardBottomNavItem(
-                                icon = bottomNavItem.icon,
-                                contentDescription = bottomNavItem.contentDescription,
-                                selected = bottomNavItem.route == navController.currentDestination?.route,
-                                alertCount = bottomNavItem.alertCount,
-                                enabled = bottomNavItem.icon != null
-                            ) {
-                                if (navController.currentDestination?.route != bottomNavItem.route) {
-                                    onBottomNavClicked(bottomNavItem.route)
+                // this wrapper is needed to avoid overlay on Bottom bar in dark mode
+                CompositionLocalProvider(LocalElevationOverlay provides null) {
+                    BottomAppBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        backgroundColor = MaterialTheme.colors.surface,
+                        cutoutShape = CircleShape,
+                        elevation = 0.dp
+                    ) {
+                        BottomNavigation(backgroundColor = MaterialTheme.colors.surface) {
+                            bottomNavItems.forEachIndexed { i, bottomNavItem ->
+                                StandardBottomNavItem(
+                                    icon = bottomNavItem.icon,
+                                    contentDescription = bottomNavItem.contentDescription,
+                                    selected = bottomNavItem.route == navController.currentDestination?.route,
+                                    alertCount = bottomNavItem.alertCount,
+                                    enabled = bottomNavItem.icon != null
+                                ) {
+                                    if (navController.currentDestination?.route != bottomNavItem.route) {
+                                        onBottomNavClicked(bottomNavItem.route)
+                                    }
                                 }
                             }
                         }
