@@ -67,7 +67,7 @@ class PhotoViewModel @Inject constructor(
             showMessage(application.getString(R.string.no_internet))
             _uiState.update { currentState ->
                 currentState.copy(
-                    requestState = if (currentState.photosList.isEmpty()) NetworkState.Error else NetworkState.Success
+                    requestState = NetworkState.Error
                 )
             }
         }
@@ -108,7 +108,7 @@ class PhotoViewModel @Inject constructor(
                 }
 
                 withContext(Dispatchers.Main) {
-                    val targetPhotosList = if (nextPage && listOfPhotos.isNotEmpty()) {
+                    val targetPhotosList = if (nextPage) {
                         var newList = uiState.value.photosList.toMutableList()
                         newList.addAll(listOfPhotos)
                         newList = newList.distinct().toMutableList()

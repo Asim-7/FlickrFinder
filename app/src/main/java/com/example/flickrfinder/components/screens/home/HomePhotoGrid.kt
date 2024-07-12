@@ -33,28 +33,24 @@ fun HomePhotoGrid(
 ) {
     val uiState by navigationViewModel.uiState.collectAsState()
 
-    when (uiState.requestState) {
-        NetworkState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colors.primary)
-            }
-        }
-
-        NetworkState.Error -> {
-            Retry(onRetryClicked = { if (!navigationViewModel.inProgress) onRetryClicked() })
-        }
-
-        NetworkState.Success -> {
-            PhotoGrid(
-                uiState = uiState,
-                onItemClicked = onItemClicked,
-                onLastItemReached = onLastItemReached
-            )
+    if (uiState.requestState == NetworkState.Loading) {
+        Box(
+            modifier = Modifier.wrapContentSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(color = MaterialTheme.colors.primary)
         }
     }
+
+    if (uiState.requestState != NetworkState.Loading && uiState.photosList.isEmpty()) {
+        Retry(onRetryClicked = { if (!navigationViewModel.inProgress) onRetryClicked() })
+    }
+
+    PhotoGrid(
+        uiState = uiState,
+        onItemClicked = onItemClicked,
+        onLastItemReached = onLastItemReached
+    )
 }
 
 @Composable
