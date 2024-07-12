@@ -108,30 +108,35 @@ class PhotoViewModel @Inject constructor(
                 }
 
                 withContext(Dispatchers.Main) {
-                    val targetPhotosList = if (nextPage) {
-                        var newList = uiState.value.photosList.toMutableList()
-                        newList.addAll(listOfPhotos)
-                        newList = newList.distinct().toMutableList()
-                        newList
-                    } else {
-                        listOfPhotos
-                    }
-
-                    if (resultMessage.isNotEmpty()) showMessage(resultMessage)
-
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            photosList = targetPhotosList,
-                            requestState = if (targetPhotosList.isEmpty()) NetworkState.Error else NetworkState.Success
-                        )
-                    }
-
-                    // delay added due to toast msg on screen
-                    val delay = if (resultMessage.isEmpty()) 0 else 1500
-                    Handler(Looper.getMainLooper()).postDelayed({ inProgress = false }, delay.toLong())
+                    onRequestComplete(nextPage, listOfPhotos, resultMessage)
                 }
             }
         }
+    }
+
+    private fun onRequestComplete(
+        nextPage: Boolean,
+        listOfPhotos: MutableList<PhotoData>,
+        resultMessage: String
+    ) {
+        val targetPhotosList = if (nextPage) {
+            (uiState.value.photosList + listOfPhotos).distinct().toMutableList()
+        } else {
+            listOfPhotos
+        }
+
+        if (resultMessage.isNotEmpty()) showMessage(resultMessage)
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                photosList = targetPhotosList,
+                requestState = if (targetPhotosList.isEmpty()) NetworkState.Error else NetworkState.Success
+            )
+        }
+
+        // delay added due to toast msg on screen
+        val delay = if (resultMessage.isEmpty()) 0 else 1500
+        Handler(Looper.getMainLooper()).postDelayed({ inProgress = false }, delay.toLong())
     }
 
     fun showMessage(resultMessage: String) {
