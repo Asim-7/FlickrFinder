@@ -1,6 +1,5 @@
 package com.example.flickrfinder.viewmodel
 
-import android.app.Application
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
@@ -8,13 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.flickrfinder.R
 import com.example.flickrfinder.model.FlickrUiState
 import com.example.flickrfinder.model.NetworkState
 import com.example.flickrfinder.model.Photo
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.respository.PhotoRepository
-import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
@@ -30,7 +27,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhotoViewModel @Inject constructor(
-    private val application: Application,
     private val sharedPreferences: SharedPreferences,
     private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and TEST repository
 ) : ViewModel() {
@@ -63,10 +59,10 @@ class PhotoViewModel @Inject constructor(
         if (isNetworkConnected()) {
             performNetworkCall(search, nextPage)
         } else {
-            showMessage(application.getString(R.string.no_internet))
             _uiState.update { currentState ->
                 currentState.copy(
-                    requestState = NetworkState.Error
+                    requestState = NetworkState.Error,
+                    messageState = "No internet"
                 )
             }
         }
@@ -86,7 +82,7 @@ class PhotoViewModel @Inject constructor(
             viewModelScope.launch {
                 val response = repository.getPhotos(search, nextPage)
                 val listOfPhotos = mutableListOf<PhotoData>()
-                var resultMessage = ""
+                var requestFailed = true
 
                 response.onSuccess {
                     if (data.stat == "ok") {
@@ -96,18 +92,16 @@ class PhotoViewModel @Inject constructor(
                                 listOfPhotos.add(PhotoData(it.title!!, it.url_n!!, largePhoto))
                             }
                         }
-                    } else {
-                        val startText = application.getString(R.string.request_response)
-                        resultMessage = "$startText: ${data.stat}"
+                        requestFailed = false
                     }
                 }.onError {
-                    resultMessage = "$statusCode - ${message()}"
+                    // resultMessage = "$statusCode - ${message()}"
                 }.onException {
-                    resultMessage = message()
+                    // resultMessage = message()
                 }
 
                 withContext(Dispatchers.Main) {
-                    onRequestComplete(nextPage, listOfPhotos, resultMessage)
+                    onRequestComplete(nextPage, listOfPhotos, requestFailed)
                 }
             }
         }
@@ -116,7 +110,7 @@ class PhotoViewModel @Inject constructor(
     private fun onRequestComplete(
         nextPage: Boolean,
         listOfPhotos: MutableList<PhotoData>,
-        resultMessage: String
+        requestFailed: Boolean
     ) {
         val targetPhotosList = if (nextPage) {
             (uiState.value.photosList + listOfPhotos).distinct().toMutableList()
@@ -124,7 +118,7 @@ class PhotoViewModel @Inject constructor(
             listOfPhotos
         }
 
-        if (resultMessage.isNotEmpty()) showMessage(resultMessage)
+        if (requestFailed) showMessage("Failed to fetch data, please try again")
 
         _uiState.update { currentState ->
             currentState.copy(
@@ -134,7 +128,7 @@ class PhotoViewModel @Inject constructor(
         }
 
         // delay added due to toast msg on screen
-        val delay = if (resultMessage.isEmpty()) 0 else 1500
+        val delay = if (requestFailed) 1500 else 0
         Handler(Looper.getMainLooper()).postDelayed({ inProgress = false }, delay.toLong())
     }
 
