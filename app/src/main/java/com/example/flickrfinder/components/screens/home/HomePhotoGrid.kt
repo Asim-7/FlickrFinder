@@ -33,15 +33,6 @@ fun HomePhotoGrid(
 ) {
     val uiState by navigationViewModel.uiState.collectAsState()
 
-    if (uiState.requestState == NetworkState.Loading) {
-        Box(
-            modifier = Modifier.wrapContentSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(color = MaterialTheme.colors.primary)
-        }
-    }
-
     if (uiState.requestState != NetworkState.Loading && uiState.photosList.isEmpty()) {
         Retry(onRetryClicked = { if (!navigationViewModel.inProgress) onRetryClicked() })
     }
@@ -86,23 +77,32 @@ fun PhotoGrid(
 ) {
     val listState = rememberLazyGridState()
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(150.dp),
-        state = listState,
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
-        contentPadding = PaddingValues(vertical = 10.dp, horizontal = 10.dp)
-    ) {
-        items(uiState.photosList) { item ->
-            PhotoItem(item) { photoItem ->
-                onItemClicked(photoItem)
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(150.dp),
+            state = listState,
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            contentPadding = PaddingValues(vertical = 10.dp, horizontal = 10.dp)
+        ) {
+            items(uiState.photosList) { item ->
+                PhotoItem(item) { photoItem ->
+                    onItemClicked(photoItem)
+                }
+            }
+            item {
+                LaunchedEffect(true) {
+                    onLastItemReached()
+                }
             }
         }
-        item {
-            LaunchedEffect(true) {
-                onLastItemReached()
-            }
+
+        // Circular progress indicator
+        if (uiState.requestState == NetworkState.Loading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
