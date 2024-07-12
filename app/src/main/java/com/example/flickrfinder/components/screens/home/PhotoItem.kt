@@ -4,6 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -12,7 +13,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.rememberAsyncImagePainter
 import com.example.flickrfinder.model.PhotoData
-import com.example.flickrfinder.ui.theme.*
 
 @Composable
 fun PhotoItem(
@@ -39,7 +39,7 @@ fun PhotoItem(
             Text(
                 text = item.title,
                 modifier = Modifier
-                    .background(colorRedGrayLight)
+                    .background(MaterialTheme.colors.primaryVariant)
                     .fillMaxWidth()
                     .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)
                     .horizontalScroll(scroll),

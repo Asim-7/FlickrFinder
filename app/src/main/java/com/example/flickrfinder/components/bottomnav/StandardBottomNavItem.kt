@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.flickrfinder.ui.theme.colorRedDark
 
 @Composable
 @Throws(IllegalArgumentException::class)
@@ -32,7 +31,7 @@ fun RowScope.StandardBottomNavItem(
     contentDescription: String? = null,
     selected: Boolean = false,
     alertCount: Int? = null,
-    selectedColor: Color = colorRedDark,
+    selectedColor: Color = MaterialTheme.colors.primary,
     unselectedColor: Color = Color.Gray,
     enabled: Boolean = true,
     onClick: () -> Unit
@@ -105,7 +104,7 @@ fun RowScope.StandardBottomNavItem(
                             .offset(10.dp)
                             .size(15.dp)
                             .clip(CircleShape)
-                            .background(colorRedDark)
+                            .background(MaterialTheme.colors.primary)
                     )
                 }
             }

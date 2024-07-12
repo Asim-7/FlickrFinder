@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.Composable
@@ -14,7 +15,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.example.flickrfinder.ui.theme.colorRedDark
 import com.example.flickrfinder.ui.theme.colorWhite
 
 @Composable
@@ -65,7 +65,7 @@ fun PhotoPreview(url: String, title: String) {
 fun CloseButton(onCloseClicked: () -> Unit) {
     FloatingActionButton(
         modifier = Modifier.padding(top = 15.dp),
-        backgroundColor = colorRedDark,
+        backgroundColor = MaterialTheme.colors.primary,
         onClick = onCloseClicked
     ) {
         Icon(

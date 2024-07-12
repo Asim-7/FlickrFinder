@@ -1,11 +1,12 @@
 package com.example.flickrfinder.viewmodel
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flickrfinder.R
@@ -14,7 +15,6 @@ import com.example.flickrfinder.model.NetworkState
 import com.example.flickrfinder.model.Photo
 import com.example.flickrfinder.model.PhotoData
 import com.example.flickrfinder.respository.PhotoRepository
-import com.example.flickrfinder.util.Constants.STORAGE_NAME
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
@@ -32,24 +32,32 @@ import javax.inject.Inject
 @HiltViewModel
 class PhotoViewModel @Inject constructor(
     private val application: Application,
+    private val sharedPreferences: SharedPreferences,
     private val repository: PhotoRepository,              // here the HelpRepository is an interface because it helps this view model to be tested with both DEFAULT and TEST repository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FlickrUiState())
     val uiState: StateFlow<FlickrUiState> = _uiState.asStateFlow()
 
+    private val _darkTheme = MutableLiveData(false)
+    val darkTheme: LiveData<Boolean> = _darkTheme
+
     var titleText = "Nature"
     var inProgress = false
     private var predictionsList = mutableListOf(titleText)
-    private lateinit var sharedPreference: SharedPreferences
 
     init {
         initLocalDatabase()
     }
 
+    fun updateTheme() {
+        _darkTheme.value = !_darkTheme.value!!
+        saveLocallyDarkMode()
+    }
+
     private fun initLocalDatabase() {
-        sharedPreference = application.getSharedPreferences(STORAGE_NAME, Context.MODE_PRIVATE)
         retrieveFromLocal()
+        retrieveFromLocalDarkMode()
     }
 
     fun fetchData(search: String, nextPage: Boolean = false) {
@@ -163,7 +171,7 @@ class PhotoViewModel @Inject constructor(
     }
 
     private fun saveLocally(text: String) {
-        val editor = sharedPreference.edit()
+        val editor = sharedPreferences.edit()
         val set: MutableSet<String> = HashSet()
         set.addAll(predictionsList)
         editor.putStringSet("predictions_list", set)
@@ -172,17 +180,30 @@ class PhotoViewModel @Inject constructor(
     }
 
     private fun retrieveFromLocal() {
-        val set: MutableSet<String>? = sharedPreference.getStringSet("predictions_list", null)
+        val set: MutableSet<String>? = sharedPreferences.getStringSet("predictions_list", null)
         if (!set.isNullOrEmpty()) {
             set.forEach {
                 addPrediction(it, false)
             }
         }
 
-        val savedTitle: String? = sharedPreference.getString("title", null)
+        val savedTitle: String? = sharedPreferences.getString("title", null)
         if (!savedTitle.isNullOrEmpty()) titleText = savedTitle
 
         fetchData(predictionsList[0])
+    }
+
+    private fun saveLocallyDarkMode() {
+        val editor = sharedPreferences.edit()
+        editor.putString("darkMode", darkTheme.value!!.toString())
+        editor.apply()
+    }
+
+    private fun retrieveFromLocalDarkMode() {
+        val retrievedString = sharedPreferences.getString("darkMode", null)
+        if (retrievedString != null) {
+            _darkTheme.value = retrievedString.toBoolean()
+        }
     }
 
     /** below functions are only used for view model testing */

@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.example.flickrfinder.model.FlickrUiState
 import com.example.flickrfinder.model.NetworkState
 import com.example.flickrfinder.model.PhotoData
-import com.example.flickrfinder.ui.theme.colorRedDark
 import com.example.flickrfinder.ui.theme.colorWhite
 import com.example.flickrfinder.viewmodel.PhotoViewModel
 
@@ -40,7 +39,7 @@ fun HomePhotoGrid(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = colorRedDark)
+                CircularProgressIndicator(color = MaterialTheme.colors.primary)
             }
         }
 
@@ -66,7 +65,7 @@ fun Retry(onRetryClicked: () -> Unit) {
     ) {
         Button(
             onClick = onRetryClicked,
-            colors = ButtonDefaults.buttonColors(backgroundColor = colorRedDark),
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
             modifier = Modifier
                 .width(300.dp)
                 .height(50.dp)
