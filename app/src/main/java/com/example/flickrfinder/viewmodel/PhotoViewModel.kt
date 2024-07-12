@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -140,7 +139,19 @@ class PhotoViewModel @Inject constructor(
     }
 
     fun showMessage(resultMessage: String) {
-        Toast.makeText(application, resultMessage, Toast.LENGTH_SHORT).show()
+        _uiState.update { currentState ->
+            currentState.copy(
+                messageState = resultMessage
+            )
+        }
+    }
+
+    fun resetMessage() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                messageState = null
+            )
+        }
     }
 
     fun itemValid(photoItem: Photo): Boolean {

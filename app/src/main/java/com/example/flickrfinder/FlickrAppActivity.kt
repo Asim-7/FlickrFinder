@@ -1,18 +1,21 @@
 package com.example.flickrfinder
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -61,6 +64,8 @@ private fun MainView(navController: NavHostController, navigationViewModel: Phot
         modifier = Modifier.fillMaxSize()
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val context = LocalContext.current
+        val uiState by navigationViewModel.uiState.collectAsState()
 
         StandardScaffold(
             navController = navController,
@@ -80,6 +85,14 @@ private fun MainView(navController: NavHostController, navigationViewModel: Phot
             }
         ) {
             Navigation(navController, navigationViewModel)
+        }
+
+        // Show toast message if any
+        LaunchedEffect(key1 = uiState.messageState) {
+            if (uiState.messageState != null) {
+                Toast.makeText(context, uiState.messageState, Toast.LENGTH_SHORT).show()
+                navigationViewModel.resetMessage() // Reset after showing
+            }
         }
     }
 }
