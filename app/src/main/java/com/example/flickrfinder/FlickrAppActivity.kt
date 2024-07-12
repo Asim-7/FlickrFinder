@@ -51,9 +51,9 @@ fun FlickrAppLayout(
     navController: NavHostController,
     navigationViewModel: PhotoViewModel = hiltViewModel()
 ) {
-    val darkTheme = navigationViewModel.darkTheme.observeAsState(initial = isSystemInDarkTheme())
-    SetStatusBarColor(darkTheme.value)
-    FlickrFinderTheme(darkTheme.value) {
+    val darkTheme by navigationViewModel.darkTheme.collectAsState(initial = isSystemInDarkTheme())
+    SetStatusBarColor(darkTheme)
+    FlickrFinderTheme(darkTheme) {
         MainView(navController, navigationViewModel)
     }
 }

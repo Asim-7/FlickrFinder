@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -88,9 +90,10 @@ fun SearchButton(navigationViewModel: PhotoViewModel) {
         IconButton(onClick = {
             navigationViewModel.updateTheme()
         }) {
+            val darkTheme by navigationViewModel.darkTheme.collectAsState()
             Icon(
-                imageVector = if (navigationViewModel.darkTheme.value!!) Icons.Filled.DarkMode else Icons.Filled.LightMode,
-                contentDescription = if (navigationViewModel.darkTheme.value!!) "Switch to Light Mode" else "Switch to Dark Mode",
+                imageVector = if (darkTheme) Icons.Filled.DarkMode else Icons.Filled.LightMode,
+                contentDescription = if (darkTheme) "Switch to Light Mode" else "Switch to Dark Mode",
                 modifier = Modifier.size(24.dp),
                 tint = MaterialTheme.colors.surface
             )

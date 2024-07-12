@@ -34,8 +34,8 @@ class PhotoViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(FlickrUiState())
     val uiState: StateFlow<FlickrUiState> = _uiState.asStateFlow()
 
-    private val _darkTheme = MutableLiveData(false)
-    val darkTheme: LiveData<Boolean> = _darkTheme
+    private val _darkTheme = MutableStateFlow(false)
+    val darkTheme: StateFlow<Boolean> = _darkTheme.asStateFlow()
 
     var titleText = "Nature"
     var inProgress = false
@@ -205,7 +205,7 @@ class PhotoViewModel @Inject constructor(
 
     private fun saveLocallyDarkMode() {
         val editor = sharedPreferences.edit()
-        editor.putString("darkMode", darkTheme.value!!.toString())
+        editor.putString("darkMode", darkTheme.value.toString())
         editor.apply()
     }
 
