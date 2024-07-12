@@ -44,7 +44,7 @@ fun SearchView(
         modifier = Modifier.fillMaxWidth(),
         query = uiState.searchItemValue,
         onQueryChanged = { text ->
-            navigationViewModel.updateSearchItem(text)
+            navigationViewModel.updateSearchQuery(text)
         },
         predictions = uiState.queryList,
         onEmptyClick = {
@@ -54,7 +54,7 @@ fun SearchView(
             onSubmitSearch(uiState.searchItemValue)
         },
         onItemClick = { text ->
-            navigationViewModel.updateSearchItem(text)
+            navigationViewModel.updateSearchQuery(text)
         }
     ) {
         Row(modifier = Modifier.wrapContentSize()) {

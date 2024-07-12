@@ -66,7 +66,7 @@ fun HomeScreen(
 fun TitleText(navigationViewModel: PhotoViewModel) {
     val scroll = rememberScrollState(0)
     Text(
-        text = navigationViewModel.titleText,
+        text = navigationViewModel.currentSearchQuery,
         color = MaterialTheme.colors.onSurface,
         modifier = Modifier
             .width(200.dp)
@@ -88,7 +88,7 @@ fun SearchButton(navigationViewModel: PhotoViewModel) {
             .background(MaterialTheme.colors.primary)
     ) {
         IconButton(onClick = {
-            navigationViewModel.updateTheme()
+            navigationViewModel.toggleTheme()
         }) {
             val darkTheme by navigationViewModel.darkTheme.collectAsState()
             Icon(

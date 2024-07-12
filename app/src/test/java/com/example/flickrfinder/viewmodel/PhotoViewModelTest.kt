@@ -22,7 +22,7 @@ class PhotoViewModelTest {
 
     @Test
     fun `starting title text is nature`() {
-        val titleText = viewModel.titleText
+        val titleText = viewModel.currentSearchQuery
         assertThat(titleText).isEqualTo("Nature")
     }
 

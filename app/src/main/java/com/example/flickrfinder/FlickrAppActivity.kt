@@ -12,7 +12,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -76,11 +75,11 @@ private fun MainView(navController: NavHostController, navigationViewModel: Phot
                 ProfileScreen.route,
             ),
             onFabClick = {
-                navigationViewModel.updateSearchItem("")
+                navigationViewModel.updateSearchQuery("")
                 navController.navigate(SearchScreen.route)
             },
             onBottomNavClicked = {
-                if (SearchScreen.route == it) navigationViewModel.updateSearchItem("")
+                if (SearchScreen.route == it) navigationViewModel.updateSearchQuery("")
                 navController.navigateSingleTopTo(it)
             }
         ) {
@@ -91,7 +90,7 @@ private fun MainView(navController: NavHostController, navigationViewModel: Phot
         LaunchedEffect(key1 = uiState.messageState) {
             if (uiState.messageState != null) {
                 Toast.makeText(context, uiState.messageState, Toast.LENGTH_SHORT).show()
-                navigationViewModel.resetMessage() // Reset after showing
+                navigationViewModel.clearMessage() // Reset after showing
             }
         }
     }

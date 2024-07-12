@@ -35,10 +35,10 @@ fun Navigation(navController: NavHostController, navigationViewModel: PhotoViewM
                     }
                 },
                 onLastItemReached = {
-                    navigationViewModel.fetchData(navigationViewModel.titleText, true)
+                    navigationViewModel.fetchData(navigationViewModel.currentSearchQuery, true)
                 },
                 onRetryClicked = {
-                    navigationViewModel.fetchData(navigationViewModel.titleText)
+                    navigationViewModel.fetchData(navigationViewModel.currentSearchQuery)
                 }
             )
         }
@@ -69,7 +69,7 @@ fun Navigation(navController: NavHostController, navigationViewModel: PhotoViewM
             SearchView(
                 navigationViewModel = navigationViewModel,
                 onSubmitSearch = {
-                    navigationViewModel.addPrediction(it, true)
+                    navigationViewModel.addSearchQueryToHistory(it, true)
                     navigationViewModel.fetchData(it)
                     if (navigationViewModel.isNetworkConnected()) {
                         navController.navigate(route = HomeScreen.route) { popUpToRoute }

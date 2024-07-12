@@ -34,7 +34,7 @@ fun HomePhotoGrid(
     val uiState by navigationViewModel.uiState.collectAsState()
 
     if (uiState.requestState != NetworkState.Loading && uiState.photosList.isEmpty()) {
-        Retry(onRetryClicked = { if (!navigationViewModel.inProgress) onRetryClicked() })
+        Retry(onRetryClicked = { if (!navigationViewModel.isLoading) onRetryClicked() })
     }
 
     PhotoGrid(
